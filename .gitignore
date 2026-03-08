@@ -1,0 +1,47 @@
+# ========================
+# PYTHON & DJANGO
+# ========================
+# File cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Folder Virtual Environment (PENTING!)
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# File Database Lokal Django (PENTING!)
+db.sqlite3
+db.sqlite3-journal
+
+# File Media (Upload dari User)
+media/
+uploads/
+
+# File Log
+*.log
+
+# ========================
+# IDE & OS (Sistem Operasi)
+# ========================
+# Folder VS Code
+.vscode/
+
+# Folder PyCharm / IntelliJ
+.idea/
+
+# File cache OS (Mac & Windows)
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ========================
+# SPESIFIK PROJECT INI (Opsional)
+# ========================
+# Jika kamu tidak ingin file Excel hasil generate ikut ke-push 
+# (karena temanmu bisa meng-generate-nya sendiri pakai generate_excel.py)
+# Hapus tanda pagar (#) di bawah ini:
+# static/lkps_app/excel_templates/*.xlsx
