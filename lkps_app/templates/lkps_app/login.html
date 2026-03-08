@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistem Automasi LKPS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --pradita-navy: #0A2540;
+            --pradita-orange: #F7821B;
+            --bg-light: #F8FAFC;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            height: 100vh;
+            overflow: hidden;
+        }
+        .login-split {
+            height: 100vh;
+            display: flex;
+        }
+        /* Bagian Kiri: Branding (Hanya muncul di layar besar) */
+        .login-branding {
+            flex: 1.2;
+            background: linear-gradient(135deg, var(--pradita-navy) 0%, #061626 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Ornamen Lingkaran di Background */
+        .login-branding::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: rgba(247, 130, 27, 0.05);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+        .login-branding::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            bottom: -50px;
+            left: -100px;
+        }
+        
+        /* Bagian Kanan: Form Login */
+        .login-form-container {
+            flex: 1;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.03);
+            z-index: 2;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+        }
+        .form-control {
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            background-color: #F1F5F9;
+            border: 1px solid transparent;
+            font-size: 0.95rem;
+        }
+        .form-control:focus {
+            background-color: white;
+            border-color: var(--pradita-orange);
+            box-shadow: 0 0 0 4px rgba(247, 130, 27, 0.15);
+        }
+        .btn-login {
+            background-color: var(--pradita-navy);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            background-color: #061626;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(10, 37, 64, 0.15);
+        }
+        
+        @media (max-width: 992px) {
+            .login-branding { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-split">
+    <div class="login-branding d-none d-lg-flex">
+        <div style="z-index: 2;">
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-white text-dark rounded-circle d-flex justify-content-center align-items-center me-3 shadow" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                    <i class="fas fa-university" style="color: var(--pradita-orange);"></i>
+                </div>
+                <h2 class="fw-bold mb-0">PRADITA <span style="color: var(--pradita-orange);">UNIVERSITY</span></h2>
+            </div>
+            <h1 class="display-5 fw-extrabold mb-4" style="line-height: 1.2;">Sistem Automasi<br>Penyusunan LKPS</h1>
+            <p class="fs-5 text-white-50 mb-5" style="max-width: 500px;">
+                Platform terintegrasi untuk memudahkan Program Studi dalam mengelola, menyusun, dan mengekspor Laporan Kinerja Program Studi (LKPS) sesuai standar LAM INFOKOM.
+            </p>
+            
+            <div class="d-flex align-items-center mt-auto">
+                <div class="d-flex me-3">
+                    <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+                    <span class="text-white-50">Auto-Save Terintegrasi</span>
+                </div>
+                <div class="d-flex">
+                    <i class="fas fa-file-word text-primary me-2 mt-1"></i>
+                    <span class="text-white-50">Export Microsoft Word</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-form-container">
+        <div class="login-card">
+            <div class="text-center mb-5 d-lg-none">
+                <i class="fas fa-university fa-3x mb-3" style="color: var(--pradita-navy);"></i>
+                <h3 class="fw-bold text-dark">Sistem LKPS</h3>
+            </div>
+
+            <h3 class="fw-bold text-dark mb-1">Selamat Datang 👋</h3>
+            <p class="text-muted mb-4">Silakan masuk menggunakan akun Program Studi Anda.</p>
+
+            <form action="{% url 'dashboard' %}">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="form-label fw-semibold text-dark small">Email / Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted ps-3">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0 ps-0" placeholder="admin.prodi@pradita.ac.id" required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <label class="form-label fw-semibold text-dark small mb-0">Kata Sandi</label>
+                        <a href="#" class="text-decoration-none small fw-semibold" style="color: var(--pradita-orange);">Lupa Sandi?</a>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted ps-3">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" class="form-control border-start-0 ps-0" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                    <label class="form-check-label text-muted small" for="rememberMe">
+                        Ingat saya di perangkat ini
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-login w-100 d-flex justify-content-center align-items-center">
+                    Masuk ke Dashboard <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="text-muted small">Belum memiliki akun? <br><a href="#" class="text-decoration-none fw-semibold" style="color: var(--pradita-navy);">Hubungi Administrator Universitas</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -27,20 +27,47 @@ body {
 }
 
 /* --- TAMPILAN SIDEBAR COLORFUL --- */
+/* --- TAMPILAN SIDEBAR COLORFUL --- */
 .sidebar {
     width: var(--sidebar-width);
     background: linear-gradient(145deg, var(--pradita-navy) 0%, #061626 100%);
-    min-height: 100vh;
+    height: 100vh; /* Ubah min-height menjadi height */
     position: fixed;
     z-index: 1000;
     box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    
+    /* Tambahan agar bisa di-scroll */
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
+/* Scrollbar khusus untuk Sidebar */
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+.sidebar::-webkit-scrollbar-thumb:hover { background: rgba(247, 130, 27, 0.8); }
+
+/* --- HEADER SIDEBAR (Diperbaiki agar tidak nabrak) --- */
 .sidebar-header {
     padding: 25px 20px;
-    background-color: rgba(255, 255, 255, 0.03);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background-color: var(--pradita-navy); /* Background solid */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     text-align: center;
+    position: sticky; /* Tetap menempel di atas */
+    top: 0;
+    z-index: 1020; /* Menutupi menu yang discroll ke atas */
+}
+
+/* Pastikan list menu memiliki jarak dari header */
+.sidebar-nav {
+    padding-top: 15px; 
+    list-style: none; 
+    margin: 0; 
+}
+
+/* Pastikan list menu memiliki jarak dari header */
+.sidebar-nav {
+    padding-top: 15px; 
 }
 
 .sidebar-brand {

@@ -1,0 +1,237 @@
+{% extends 'lkps_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Manajemen Pengguna</h2>
+        <p class="text-muted">Kelola akses akun dosen, kaprodi, auditor, dan administrator sistem.</p>
+    </div>
+    <button class="btn text-white shadow-sm px-4" style="background-color: var(--lms-purple);" data-bs-toggle="modal" data-bs-target="#modalTambahUser">
+        <i class="fas fa-user-plus me-2"></i> Tambah Pengguna
+    </button>
+</div>
+
+<div class="card card-modern border-top-purple">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%" class="text-center">No</th>
+                        <th width="25%">Nama Lengkap</th>
+                        <th width="20%">Email / Username</th>
+                        <th width="15%" class="text-center">Peran (Role)</th>
+                        <th width="15%" class="text-center">Program Studi</th>
+                        <th width="10%" class="text-center">Status</th>
+                        <th width="10%" class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-user">
+                    <tr>
+                        <td class="text-center fw-bold text-muted">1</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user-tie text-muted"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">Dr. Budi Santoso</div>
+                                    <small class="text-muted">NIDN: 0412345678</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted">budi.santoso@pradita.ac.id</td>
+                        <td class="text-center"><span class="badge bg-primary rounded-pill px-3">Kaprodi</span></td>
+                        <td class="text-center fw-medium text-muted">Informatika</td>
+                        <td class="text-center"><span class="badge bg-success rounded-pill px-3">Aktif</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center fw-bold text-muted">2</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user-shield text-muted"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">Admin SPMI</div>
+                                    <small class="text-muted">Sistem Penjaminan Mutu</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted">admin.spmi@pradita.ac.id</td>
+                        <td class="text-center"><span class="badge rounded-pill px-3" style="background-color: var(--lms-purple);">Auditor Mutu</span></td>
+                        <td class="text-center fw-medium text-muted">- Semua Prodi -</td>
+                        <td class="text-center"><span class="badge bg-success rounded-pill px-3">Aktif</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTambahUser" tabindex="-1" aria-labelledby="modalTambahUserLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box icon-box-purple me-3 mb-0" style="width: 40px; height: 40px;">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark" id="modalTambahUserLabel">Tambah Pengguna Baru</h5>
+                        <small class="text-muted">Buat kredensial login dan atur hak akses pengguna.</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form id="formTambahUser">
+                {% csrf_token %}
+                <div class="modal-body px-4 py-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Nama Lengkap</label>
+                            <input type="text" class="form-control" name="nama_lengkap" id="inputNamaUser" placeholder="Contoh: Andi Wijaya, S.Kom., M.Kom." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Nomor Induk (NIDN/NIK)</label>
+                            <input type="text" class="form-control" name="nomor_induk" id="inputNIDN" placeholder="Opsional">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Email (Sebagai Username)</label>
+                            <input type="email" class="form-control" name="email" id="inputEmail" placeholder="andi@pradita.ac.id" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Password Sementara</label>
+                            <input type="password" class="form-control" name="password" id="inputPassword" placeholder="Buat password awal..." required>
+                        </div>
+                        
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-bold border-bottom pb-2">Hak Akses & Penugasan</h6>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Peran (Role)</label>
+                            <select class="form-select" name="role" id="inputRole" required>
+                                <option value="" selected disabled>Pilih Peran...</option>
+                                <option value="Kaprodi">Ketua Program Studi</option>
+                                <option value="Dosen">Dosen / Tim Penyusun</option>
+                                <option value="Auditor">Auditor Mutu (SPMI)</option>
+                                <option value="Super Admin">Administrator Sistem</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Akses Program Studi</label>
+                            <select class="form-select" name="akses_prodi" id="inputAksesProdi" required>
+                                <option value="" selected disabled>Pilih Akses...</option>
+                                <option value="- Semua Prodi -">Semua Program Studi (Khusus Admin/Auditor)</option>
+                                <option value="Informatika">S1 Informatika</option>
+                                <option value="Sistem Informasi">S1 Sistem Informasi</option>
+                                <option value="DKV">S1 Desain Komunikasi Visual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pb-4 px-4">
+                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn text-white fw-bold px-4" style="background-color: var(--lms-purple);" id="btnSimpanUser">
+                        <i class="fas fa-save me-2"></i> Buat Akun
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formUser = document.getElementById('formTambahUser');
+    const btnSimpan = document.getElementById('btnSimpanUser');
+    
+    if(formUser) {
+        formUser.addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            // Ambil data dari form
+            const nama = document.getElementById('inputNamaUser').value;
+            const nidn = document.getElementById('inputNIDN').value || '-';
+            const email = document.getElementById('inputEmail').value;
+            const role = document.getElementById('inputRole').value;
+            const prodi = document.getElementById('inputAksesProdi').value;
+            
+            // 1. Animasi Loading
+            const originalBtnText = btnSimpan.innerHTML;
+            btnSimpan.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+            btnSimpan.classList.add('disabled');
+            
+            // 2. Simulasi request ke server
+            setTimeout(() => {
+                // Skenario Sukses: Reset tombol
+                btnSimpan.innerHTML = originalBtnText;
+                btnSimpan.classList.remove('disabled');
+                
+                // Tutup Modal
+                var myModalEl = document.getElementById('modalTambahUser');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                
+                // Penentuan Warna Badge Berdasarkan Role
+                let badgeColor = 'bg-secondary';
+                let iconClass = 'fa-user';
+                
+                if(role === 'Kaprodi') { badgeColor = 'bg-primary'; iconClass = 'fa-user-tie'; }
+                else if(role === 'Dosen') { badgeColor = 'bg-info text-dark'; iconClass = 'fa-chalkboard-teacher'; }
+                else if(role === 'Auditor') { badgeColor = 'bg-warning text-dark'; iconClass = 'fa-search'; }
+                else if(role === 'Super Admin') { badgeColor = 'bg-danger'; iconClass = 'fa-user-shield'; }
+
+                // Tambah ke tabel secara instan (Feedback Visual)
+                const tbody = document.getElementById('tabel-user');
+                const rowCount = tbody.getElementsByTagName('tr').length + 1;
+                
+                const newRow = `
+                    <tr class="table-success" style="transition: all 1s;">
+                        <td class="text-center fw-bold text-muted">${rowCount}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded-circle d-flex justify-content-center align-items-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="fas ${iconClass} text-muted"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">${nama}</div>
+                                    <small class="text-muted">NIDN/NIK: ${nidn}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-muted">${email}</td>
+                        <td class="text-center"><span class="badge ${badgeColor} rounded-pill px-3">${role}</span></td>
+                        <td class="text-center fw-medium text-muted">${prodi}</td>
+                        <td class="text-center"><span class="badge bg-success rounded-pill px-3">Aktif</span></td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', newRow);
+                
+                // Reset form
+                formUser.reset();
+                
+                // Munculkan notifikasi sukses
+                alert(`Akun untuk ${nama} (${role}) berhasil dibuat! Sistem otomatis mengirimkan email verifikasi.`);
+                
+            }, 1500); 
+        });
+    }
+});
+</script>
+{% endblock %}

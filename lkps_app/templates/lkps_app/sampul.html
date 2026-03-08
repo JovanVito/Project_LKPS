@@ -1,67 +1,196 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-lg-10">
-        
-        <div class="alert bg-white border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center" style="border-left: 5px solid var(--pradita-blue) !important;">
-            <div class="icon-box icon-box-blue mb-0 border-0">
-                <i class="fas fa-info-circle"></i>
-            </div>
-            <div>
-                <h6 class="fw-bold mb-1" style="color: var(--pradita-navy);">Pengisian Otomatis</h6>
-                <p class="text-muted mb-0 small">Sistem akan menyimpan setiap ketikan Anda. Anda dapat meninggalkan halaman ini kapan saja.</p>
-            </div>
-        </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Identitas Laporan LKPS</h2>
+        <p class="text-muted">Halaman Muka, Identitas Pengusul, dan Tim Penyusun</p>
+    </div>
+</div>
 
-        <div class="card card-modern border-top-orange">
-            <div class="card-header card-header-modern d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <div class="icon-box icon-box-orange">
-                        <i class="fas fa-file-signature"></i>
+<div class="row">
+    <div class="col-lg-4 mb-4">
+        <div class="card card-modern h-100" style="border-top: 4px solid var(--pradita-navy);">
+            <div class="card-header card-header-modern">
+                <h5 class="card-title fw-bold m-0">Halaman Muka</h5>
+            </div>
+            <div class="card-body text-center p-4">
+                <div class="mb-4">
+                    <div class="border rounded p-4 bg-light d-inline-block mb-3" style="width: 150px; height: 150px; border-style: dashed !important;">
+                        <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                        <br><small class="text-muted">Upload Logo PT</small>
                     </div>
-                    <div>
-                        <h3 class="card-title">Identitas Pengusul</h3>
-                        <small class="text-muted">Lengkapi profil Program Studi dan Universitas.</small>
+                    <input class="form-control form-control-sm auto-save-input" type="file" id="logo_pt">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted text-start w-100">Nama Program Studi</label>
+                    <input type="text" class="form-control text-center fw-bold auto-save-input" name="sampul_nama_ps" placeholder="Contoh: S1 INFORMATIKA">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted text-start w-100">Nama Perguruan Tinggi</label>
+                    <input type="text" class="form-control text-center fw-bold auto-save-input" name="sampul_nama_pt" placeholder="Contoh: UNIVERSITAS PRADITA">
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <label class="form-label small fw-bold text-muted text-start w-100">Kota</label>
+                        <input type="text" class="form-control text-center auto-save-input" name="sampul_kota" placeholder="Tangerang">
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label small fw-bold text-muted text-start w-100">Tahun</label>
+                        <input type="number" class="form-control text-center auto-save-input" name="sampul_tahun" value="2026">
                     </div>
                 </div>
-                <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill border border-success border-opacity-25">
-                    <i class="fas fa-check-circle me-1"></i> Tersimpan
-                </span>
             </div>
-            
+        </div>
+    </div>
+
+    <div class="col-lg-8 mb-4">
+        <div class="card card-modern h-100" style="border-top: 4px solid var(--pradita-orange);">
+            <div class="card-header card-header-modern">
+                <h5 class="card-title fw-bold m-0">Identitas Pengusul</h5>
+            </div>
             <div class="card-body p-4">
-                <form id="form-identitas">
-                    {% csrf_token %}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">Perguruan Tinggi</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_pt">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">Unit Pengelola Program Studi</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_upps">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Jenis Program</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_jenis_program">
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label small fw-bold text-muted">Nama Program Studi</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_nama_ps">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small fw-bold text-muted">Alamat</label>
+                        <textarea class="form-control form-control-sm auto-save-input" name="pengusul_alamat" rows="2"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">Nomor Telepon</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_telepon">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">E-Mail dan Website</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_email_web">
+                    </div>
                     
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label">Program Studi</label>
-                            <select class="form-select auto-save-input" name="program_studi">
-                                <option value="">-- Pilih Program Studi --</option>
-                                <option value="1">S1 Informatika</option>
-                                <option value="2">S1 Sistem Informasi</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                             <label class="form-label">Unit Pengelola Program Studi (UPPS)</label>
-                             <input type="text" class="form-control auto-save-input" name="unit_pengelola" placeholder="Masukkan nama Fakultas/Sekolah Tinggi">
-                        </div>
+                    <hr class="my-3 text-muted">
+                    
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Nomor SK Pendirian PT</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_sk_pt">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Tgl SK Pendirian PT</label>
+                        <input type="date" class="form-control form-control-sm auto-save-input" name="pengusul_tgl_sk_pt">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Pejabat Penandatangan</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_pejabat_pt">
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                             <label class="form-label">Perguruan Tinggi</label>
-                             <input type="text" class="form-control" name="perguruan_tinggi" value="Universitas Pradita" readonly style="background-color: #E2E8F0;">
-                        </div>
-                        <div class="col-md-6">
-                             <label class="form-label">Kota Pendirian</label>
-                             <input type="text" class="form-control auto-save-input" name="kota_pendirian" value="Tangerang">
-                        </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Nomor SK Pembukaan PS</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_sk_ps">
                     </div>
-                </form>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Tgl SK Pembukaan PS</label>
+                        <input type="date" class="form-control form-control-sm auto-save-input" name="pengusul_tgl_sk_ps">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Pejabat Penandatangan</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_pejabat_ps">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Tahun Pertama Menerima Mhs</label>
+                        <input type="number" class="form-control form-control-sm auto-save-input" name="pengusul_tahun_mhs">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Peringkat Akreditasi PS</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_peringkat">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Nomor SK BAN-PT</label>
+                        <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_sk_banpt">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="card card-modern mb-4" style="border-top: 4px solid var(--lms-teal);">
+    <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+        <h5 class="card-title fw-bold m-0">Identitas Tim Penyusun</h5>
+        <button class="btn btn-sm text-white" style="background-color: var(--lms-teal);" id="btn-tambah-penyusun"><i class="fas fa-plus me-1"></i>Tambah Anggota</button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%">No</th>
+                        <th width="25%" class="text-start">Nama</th>
+                        <th width="15%">NIDN</th>
+                        <th width="20%">Jabatan</th>
+                        <th width="15%">Tanggal Pengisian</th>
+                        <th width="15%">Upload Tanda Tangan</th>
+                        <th width="5%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-penyusun">
+                    <tr>
+                        <td class="baris-nomor fw-bold bg-light">1</td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input text-start" name="penyusun_nama[]" placeholder="Nama Lengkap"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="penyusun_nidn[]" placeholder="NIDN"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="penyusun_jabatan[]" placeholder="Jabatan dlm Tim"></td>
+                        <td><input type="date" class="form-control form-control-sm auto-save-input" name="penyusun_tanggal[]"></td>
+                        <td><input type="file" class="form-control form-control-sm auto-save-input" name="penyusun_ttd[]"></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus" disabled><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tbody = document.getElementById('tbody-penyusun');
+        const btnTambah = document.getElementById('btn-tambah-penyusun');
+
+        function updateRows() {
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach((tr, index) => {
+                tr.querySelector('.baris-nomor').textContent = index + 1;
+                const btnHapus = tr.querySelector('.btn-hapus');
+                if (rows.length > 1) btnHapus.removeAttribute('disabled');
+                else btnHapus.setAttribute('disabled', 'true');
+            });
+        }
+
+        btnTambah.addEventListener('click', function() {
+            const newRow = tbody.querySelector('tr').cloneNode(true);
+            newRow.querySelectorAll('input[type="text"], input[type="date"], input[type="file"]').forEach(i => i.value = '');
+            tbody.appendChild(newRow);
+            updateRows();
+        });
+
+        tbody.addEventListener('click', function(e) {
+            const btnHapus = e.target.closest('.btn-hapus');
+            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+                btnHapus.closest('tr').remove();
+                updateRows();
+            }
+        });
+    });
+</script>
 {% endblock %}

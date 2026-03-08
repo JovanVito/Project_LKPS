@@ -1,0 +1,187 @@
+{% extends 'lkps_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Daftar Program Studi</h2>
+        <p class="text-muted">Kelola data program studi yang ada di bawah naungan UPPS.</p>
+    </div>
+    <button class="btn text-white shadow-sm px-4" style="background-color: var(--pradita-navy);" data-bs-toggle="modal" data-bs-target="#modalTambahProdi">
+        <i class="fas fa-plus me-2"></i> Tambah Prodi Baru
+    </button>
+</div>
+
+<div class="card card-modern border-top-blue">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th width="5%" class="text-center">No</th>
+                        <th width="30%">Nama Program Studi</th>
+                        <th width="15%" class="text-center">Jenjang</th>
+                        <th width="20%" class="text-center">Status Akreditasi</th>
+                        <th width="20%">No. SK BAN-PT</th>
+                        <th width="10%" class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tabel-prodi">
+                    <tr>
+                        <td class="text-center fw-bold text-muted">1</td>
+                        <td class="fw-bold text-dark">Informatika</td>
+                        <td class="text-center"><span class="badge bg-primary rounded-pill px-3">S1</span></td>
+                        <td class="text-center"><span class="badge bg-success rounded-pill px-3">Baik Sekali</span></td>
+                        <td class="text-muted small">1234/SK/BAN-PT/Akred/S/I/2026</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center fw-bold text-muted">2</td>
+                        <td class="fw-bold text-dark">Sistem Informasi</td>
+                        <td class="text-center"><span class="badge bg-primary rounded-pill px-3">S1</span></td>
+                        <td class="text-center"><span class="badge bg-warning text-dark rounded-pill px-3">Baik</span></td>
+                        <td class="text-muted small">5678/SK/BAN-PT/Akred/S/II/2026</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1" title="Edit"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalTambahProdi" tabindex="-1" aria-labelledby="modalTambahProdiLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 pb-0 pt-4 px-4">
+                <div class="d-flex align-items-center">
+                    <div class="icon-box icon-box-blue me-3 mb-0" style="width: 40px; height: 40px;">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark" id="modalTambahProdiLabel">Tambah Program Studi</h5>
+                        <small class="text-muted">Masukkan detail data program studi baru.</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <form id="formTambahProdi">
+                {% csrf_token %}
+                <div class="modal-body px-4 py-4">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Nama Program Studi</label>
+                        <input type="text" class="form-control" name="nama_prodi" id="inputNamaProdi" placeholder="Contoh: Teknik Elektro" required>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Jenjang Program</label>
+                            <select class="form-select" name="jenjang_prodi" id="inputJenjang" required>
+                                <option value="" selected disabled>Pilih Jenjang...</option>
+                                <option value="D3">D3</option>
+                                <option value="D4">D4</option>
+                                <option value="S1">S1</option>
+                                <option value="S2">S2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">Status Akreditasi</label>
+                            <select class="form-select" name="status_akreditasi" id="inputAkreditasi" required>
+                                <option value="" selected disabled>Pilih Status...</option>
+                                <option value="Unggul">Unggul</option>
+                                <option value="Baik Sekali">Baik Sekali</option>
+                                <option value="Baik">Baik</option>
+                                <option value="Belum Terakreditasi">Belum Terakreditasi</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Nomor SK BAN-PT</label>
+                        <input type="text" class="form-control" name="sk_banpt" id="inputSK" placeholder="Contoh: 123/SK/BAN-PT/..." required>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pb-4 px-4">
+                    <button type="button" class="btn btn-light fw-bold" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn text-white fw-bold px-4" style="background-color: var(--pradita-navy);" id="btnSimpanProdi">
+                        <i class="fas fa-save me-2"></i> Simpan Data
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formProdi = document.getElementById('formTambahProdi');
+    const btnSimpan = document.getElementById('btnSimpanProdi');
+    
+    if(formProdi) {
+        formProdi.addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah form melakukan refresh halaman bawaan
+            
+            // Mengambil nilai inputan
+            const nama = document.getElementById('inputNamaProdi').value;
+            const jenjang = document.getElementById('inputJenjang').value;
+            const akreditasi = document.getElementById('inputAkreditasi').value;
+            const sk = document.getElementById('inputSK').value;
+            
+            // 1. Ubah tombol jadi status Loading
+            const originalBtnText = btnSimpan.innerHTML;
+            btnSimpan.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+            btnSimpan.classList.add('disabled');
+            
+            // 2. SIMULASI KIRIM KE BACKEND (Nanti Backend yang mengganti bagian fetch ini)
+            setTimeout(() => {
+                // Skenario Sukses: Mengembalikan tombol ke semula
+                btnSimpan.innerHTML = originalBtnText;
+                btnSimpan.classList.remove('disabled');
+                
+                // Menutup Modal secara otomatis
+                var myModalEl = document.getElementById('modalTambahProdi');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                
+                // (Opsional) Langsung menambahkan baris baru ke tabel secara visual 
+                // agar terkesan instan sebelum di-refresh oleh database
+                const tbody = document.getElementById('tabel-prodi');
+                const rowCount = tbody.getElementsByTagName('tr').length + 1;
+                
+                // Menentukan warna badge akreditasi
+                let badgeColor = 'bg-success';
+                if(akreditasi === 'Unggul') badgeColor = 'bg-primary';
+                if(akreditasi === 'Baik') badgeColor = 'bg-warning text-dark';
+                if(akreditasi === 'Belum Terakreditasi') badgeColor = 'bg-secondary';
+
+                const newRow = `
+                    <tr class="table-success" style="transition: all 1s;">
+                        <td class="text-center fw-bold text-muted">${rowCount}</td>
+                        <td class="fw-bold text-dark">${nama}</td>
+                        <td class="text-center"><span class="badge bg-primary rounded-pill px-3">${jenjang}</span></td>
+                        <td class="text-center"><span class="badge ${badgeColor} rounded-pill px-3">${akreditasi}</span></td>
+                        <td class="text-muted small">${sk}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-1"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', newRow);
+                
+                // Reset form input
+                formProdi.reset();
+                
+                // Alert Sukses
+                alert(`Program Studi ${nama} berhasil ditambahkan!`);
+                
+            }, 1000); // Simulasi delay internet 1.5 detik
+        });
+    }
+});
+</script>
+{% endblock %}

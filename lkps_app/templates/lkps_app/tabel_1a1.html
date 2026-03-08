@@ -1,0 +1,89 @@
+{% extends 'lkps_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="card card-modern border-top-navy">
+    <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="card-title fw-bold">Tabel 1.A.1 Pimpinan dan Tupoksi UPPS dan PS</h3>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% static 'lkps_app/excel_templates/template_1a1.xlsx' %}" download="Template_1A1.xlsx" class="btn btn-sm btn-outline-success">
+    <i class="fas fa-download me-1"></i> Unduh Template
+</a>
+            <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" id="btn-tambah-baris">
+                <i class="fas fa-plus me-1"></i> Tambah Data
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 65vh; overflow-y: auto;">
+            <table class="table table-hover align-middle mb-0 text-center" style="min-width: 1000px;">
+                <thead class="table-light sticky-top">
+                    <tr>
+                        <th width="15%">Unit Kerja</th>
+                        <th width="20%">Nama Ketua</th>
+                        <th width="15%">Periode Jabatan</th>
+                        <th width="15%">Pendidikan Terakhir</th>
+                        <th width="15%">Jabatan Fungsional</th>
+                        <th width="15%">Tugas Pokok dan Fungsi</th>
+                        <th width="5%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-dinamis">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="unit_kerja[]"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="nama_ketua[]"></td>
+                        <td><input type="text" class="form-control form-control-sm text-center auto-save-input" name="periode_jabatan[]" placeholder="YYYY - YYYY"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="pendidikan_terakhir[]"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="jabatan_fungsional[]"></td>
+                        <td><textarea class="form-control form-control-sm auto-save-input" name="tupoksi[]" rows="2"></textarea></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tbody = document.getElementById('tbody-dinamis');
+        const btnTambah = document.getElementById('btn-tambah-baris');
+
+        function checkDeleteButtons() {
+            const baris = tbody.querySelectorAll('tr');
+            baris.forEach((tr) => {
+                const btnHapus = tr.querySelector('.btn-hapus-baris');
+                if (baris.length > 1) {
+                    btnHapus.removeAttribute('disabled');
+                } else {
+                    btnHapus.setAttribute('disabled', 'true');
+                }
+            });
+        }
+
+        btnTambah.addEventListener('click', function() {
+            const barisPertama = tbody.querySelector('tr');
+            const barisBaru = barisPertama.cloneNode(true);
+            
+            const inputs = barisBaru.querySelectorAll('input[type="text"], textarea');
+            inputs.forEach(input => input.value = '');
+            
+            tbody.appendChild(barisBaru);
+            checkDeleteButtons();
+        });
+
+        tbody.addEventListener('click', function(e) {
+            const btnHapus = e.target.closest('.btn-hapus-baris');
+            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+                btnHapus.closest('tr').remove();
+                checkDeleteButtons();
+            }
+        });
+    });
+</script>
+{% endblock %}

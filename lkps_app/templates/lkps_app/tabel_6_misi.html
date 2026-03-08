@@ -1,0 +1,62 @@
+{% extends 'lkps_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Kriteria 6: Diferensiasi Misi</h2>
+        <p class="text-muted">Kesesuaian Visi dan Misi (Tabel 6)</p>
+    </div>
+</div>
+
+<div class="card card-modern mb-4" style="border-top: 4px solid #ec1c24;"> <div class="card-header card-header-modern">
+        <h5 class="card-title fw-bold m-0">Tabel 6. Kesesuaian Visi, Misi</h5>
+        <small class="text-muted">Kebijakan, standar dan indikator terkait tridarma perguruan tinggi mencakup VMTS.</small>
+    </div>
+    <div class="card-body p-4">
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle mb-0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th width="33%" class="py-3 fs-6">Visi PT</th>
+                        <th width="33%" class="py-3 fs-6">Visi UPPS</th>
+                        <th width="33%" class="py-3 fs-6">Visi Keilmuan PS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="p-3">
+                            <textarea class="form-control auto-save-input" name="visi_pt" rows="5" placeholder="Tuliskan Visi Perguruan Tinggi di sini..."></textarea>
+                        </td>
+                        <td class="p-3">
+                            <textarea class="form-control auto-save-input" name="visi_upps" rows="5" placeholder="Tuliskan Visi Fakultas / UPPS di sini..."></textarea>
+                        </td>
+                        <td class="p-3">
+                            <textarea class="form-control auto-save-input" name="visi_ps" rows="5" placeholder="Tuliskan Visi Keilmuan Program Studi di sini..."></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+                <thead class="table-light text-center">
+                    <tr>
+                        <th class="py-3 fs-6 border-top">Misi PT</th>
+                        <th class="py-3 fs-6 border-top">Misi UPPS</th>
+                        <th class="border-top bg-white border-bottom-0"></th> </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="p-3">
+                            <textarea class="form-control auto-save-input" name="misi_pt" rows="5" placeholder="Tuliskan Misi Perguruan Tinggi di sini..."></textarea>
+                        </td>
+                        <td class="p-3">
+                            <textarea class="form-control auto-save-input" name="misi_upps" rows="5" placeholder="Tuliskan Misi Fakultas / UPPS di sini..."></textarea>
+                        </td>
+                        <td class="bg-light">
+                            <div class="text-center text-muted small"><i class="fas fa-ban me-1"></i>Tidak perlu diisi</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

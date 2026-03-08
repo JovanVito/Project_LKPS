@@ -1,0 +1,155 @@
+{% extends 'lkps_app/base.html' %}
+{% load static custom_filters %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold text-dark mb-0">Kriteria 5: Akuntabilitas</h2>
+        <p class="text-muted">Sistem Tata Kelola dan Sarana Prasarana Pendidikan (Tabel 5.1 - 5.2)</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% static 'lkps_app/excel_templates/template_5_akuntabilitas.xlsx' %}" download="Template_5_Akuntabilitas.xlsx" class="btn btn-outline-success shadow-sm">
+            <i class="fas fa-file-excel me-2"></i>Unduh Template Kriteria 5
+        </a>
+    </div>
+</div>
+
+<div class="card card-modern mb-4" style="border-top: 4px solid #0e6333;"> <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+        <h5 class="card-title fw-bold m-0">Tabel 5.1. Sistem Tata Kelola</h5>
+        <button class="btn btn-sm text-white" style="background-color: #0e6333;" id="btn-tambah-5-1"><i class="fas fa-plus me-1"></i>Tambah Sistem</button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 50vh; overflow-y: auto;">
+            <table class="table table-hover align-middle mb-0 text-center" style="min-width: 1000px;">
+                <thead class="table-light sticky-top">
+                    <tr>
+                        <th width="5%">No</th>
+                        <th width="15%" class="text-start">Jenis Tata Kelola</th>
+                        <th width="20%">Nama Sistem Informasi</th>
+                        <th width="15%">Akses (Lokal/Internet)</th>
+                        <th width="20%">Unit Kerja/SDM Pengelola</th>
+                        <th width="20%">Link Bukti</th>
+                        <th width="5%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-5-1">
+                    {% for jenis in "Pendidikan,Keuangan,SDM,Sarana Prasarana,Sistem Penjaminan Mutu"|split:"," %}
+                    <tr class="baris-tata-kelola">
+                        <td class="baris-nomor fw-bold bg-light">{{ forloop.counter }}</td>
+                        <td class="text-start"><input type="text" class="form-control form-control-sm auto-save-input fw-medium text-muted" name="jenis_tata_kelola[]" value="{{ jenis }}"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="nama_sistem_info[]" placeholder="Nama Sistem..."></td>
+                        <td>
+                            <select class="form-select form-select-sm auto-save-input" name="akses_sistem[]">
+                                <option value="Internet">Internet</option>
+                                <option value="Lokal">Lokal</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="unit_pengelola_sistem[]" placeholder="Contoh: Biro IT"></td>
+                        <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_bukti_sistem[]" placeholder="https://..."></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus" {% if forloop.counter <= 5 %}disabled{% endif %}><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card card-modern mb-4" style="border-top: 4px solid #f26e21;"> <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+        <h5 class="card-title fw-bold m-0">Tabel 5.2 Sarana dan Prasarana Pendidikan</h5>
+        <button class="btn btn-sm text-white" style="background-color: #f26e21;" id="btn-tambah-5-2"><i class="fas fa-plus me-1"></i>Tambah Sarana</button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 50vh; overflow-y: auto;">
+            <table class="table table-hover align-middle mb-0 text-center" style="min-width: 1200px;">
+                <thead class="table-light sticky-top">
+                    <tr>
+                        <th width="15%">Nama Prasarana</th>
+                        <th width="10%">Daya Tampung</th>
+                        <th width="10%">Luas Ruang (m2)</th>
+                        <th width="15%">Milik sendiri (M) / Sewa (W)</th>
+                        <th width="15%">Berlisensi (L) / Public Domain (P) / Tidak berlisensi</th>
+                        <th width="20%">Perangkat</th>
+                        <th width="10%">Link Bukti</th>
+                        <th width="5%">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-5-2">
+                    <tr class="baris-sarana-pend">
+                        <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="nama_prasarana_pend[]" placeholder="Contoh: Ruang Kelas A"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="daya_tampung_pend[]" value="0"></td>
+                        <td><input type="number" step="0.1" class="form-control form-control-sm text-center auto-save-input" name="luas_ruang_pend[]" value="0"></td>
+                        <td>
+                            <select class="form-select form-select-sm auto-save-input" name="kepemilikan_pend[]">
+                                <option value="M">Milik sendiri (M)</option>
+                                <option value="W">Sewa (W)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm auto-save-input" name="lisensi_pend[]">
+                                <option value="L">Berlisensi (L)</option>
+                                <option value="P">Public Domain (P)</option>
+                                <option value="Tidak berlisensi">Tidak berlisensi</option>
+                            </select>
+                        </td>
+                        <td><textarea class="form-control form-control-sm auto-save-input" name="perangkat_pend[]" rows="1" placeholder="Hardware/Software/Bahan Pustaka..."></textarea></td>
+                        <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_bukti_prasarana_pend[]" placeholder="https://..."></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus" disabled><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="bg-light p-3 border-top small text-muted">
+            <ul class="mb-0 ps-3">
+                <li><strong>Prasarana:</strong> diisi prasarana untuk pembelajaran, misal: ruang kelas, nama laboratorium, ruang perpustakaan/ruang baca, dsb.</li>
+                <li><strong>Perangkat yang dimiliki:</strong> diisi perangkat keras, perangkat lunak, bandwidth, device, tool dan bahan pustaka, dll.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function setupDynamicTable(tbodyId, btnAddId) {
+        const tbody = document.getElementById(tbodyId);
+        const btnAdd = document.getElementById(btnAddId);
+
+        function updateRows() {
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach((tr, index) => {
+                const numCell = tr.querySelector('.baris-nomor');
+                if(numCell) numCell.textContent = index + 1;
+                const btnHapus = tr.querySelector('.btn-hapus');
+                // Khusus Tabel 5.1, kita tidak membolehkan hapus 5 baris pertama sesuai format baku PDF
+                if (tbodyId === 'tbody-5-1' && index < 5) {
+                    btnHapus.setAttribute('disabled', 'true');
+                } else if (rows.length > 1 || (tbodyId === 'tbody-5-1' && rows.length > 5)) {
+                    btnHapus.removeAttribute('disabled');
+                } else {
+                    btnHapus.setAttribute('disabled', 'true');
+                }
+            });
+        }
+
+        btnAdd.addEventListener('click', function() {
+            const newRow = tbody.querySelector('tr:last-child').cloneNode(true);
+            newRow.querySelectorAll('input[type="text"], input[type="url"], textarea').forEach(i => i.value = '');
+            newRow.querySelectorAll('input[type="number"]').forEach(i => i.value = '0');
+            tbody.appendChild(newRow);
+            updateRows();
+        });
+
+        tbody.addEventListener('click', function(e) {
+            const btnHapus = e.target.closest('.btn-hapus');
+            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+                btnHapus.closest('tr').remove();
+                updateRows();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupDynamicTable('tbody-5-1', 'btn-tambah-5-1');
+        setupDynamicTable('tbody-5-2', 'btn-tambah-5-2');
+    });
+</script>
+{% endblock %}

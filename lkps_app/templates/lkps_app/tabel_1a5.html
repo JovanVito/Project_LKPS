@@ -1,0 +1,146 @@
+{% extends 'lkps_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="card card-modern border-top-navy">
+    <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="card-title fw-bold">Tabel 1.A.5 Kualifikasi Tenaga Kependidikan</h3>
+            <small class="text-muted">Isi dengan jumlah orang pada setiap kategori tingkat pendidikan terakhir.</small>
+        </div>
+        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" id="btn-tambah-tendik">
+            <i class="fas fa-plus me-1"></i> Tambah Baris
+        </button>
+    </div>
+    
+    <div class="card-body p-0">
+        <div class="table-responsive" style="max-height: 65vh; overflow-y: auto;">
+            <table class="table table-hover align-middle mb-0 text-center" style="min-width: 1400px;">
+                <thead class="table-light sticky-top">
+                    <tr>
+                        <th rowspan="2" width="3%" class="align-middle">No.</th>
+                        <th rowspan="2" width="15%" class="align-middle text-start">Jenis Tenaga Kependidikan</th>
+                        <th colspan="8" class="align-middle border-bottom">Tenaga Kependidikan dengan Pendidikan Terakhir</th>
+                        <th rowspan="2" width="5%" class="align-middle fw-bold">Jumlah</th>
+                        <th rowspan="2" width="10%" class="align-middle">Unit Kerja</th>
+                        <th rowspan="2" width="5%" class="align-middle">Aksi</th>
+                    </tr>
+                    <tr>
+                        <th width="5%">S3</th>
+                        <th width="5%">S2</th>
+                        <th width="5%">S1</th>
+                        <th width="5%">D4</th>
+                        <th width="5%">D3</th>
+                        <th width="5%">D2</th>
+                        <th width="5%">D1</th>
+                        <th width="7%">SMA/SMK/MA</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-tendik">
+                    <tr class="baris-tendik">
+                        <td class="baris-nomor">1</td>
+                        <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="jenis_tendik[]" value="Pustakawan *)"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_s3[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_s2[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_s1[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_d4[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_d3[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_d2[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_d1[]" value="0" min="0"></td>
+                        <td><input type="number" class="form-control form-control-sm text-center input-pendidikan auto-save-input" name="jml_sma[]" value="0" min="0"></td>
+                        <td><input type="text" class="form-control form-control-sm text-center bg-light total-baris fw-bold text-primary" readonly value="0"></td>
+                        <td><input type="text" class="form-control form-control-sm auto-save-input" name="unit_kerja[]" placeholder="Nama Unit"></td>
+                        <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                    </tbody>
+                <tfoot class="table-light fw-bold">
+                    <tr>
+                        <td colspan="2" class="text-end text-dark">Total</td>
+                        <td id="total-s3">0</td>
+                        <td id="total-s2">0</td>
+                        <td id="total-s1">0</td>
+                        <td id="total-d4">0</td>
+                        <td id="total-d3">0</td>
+                        <td id="total-d2">0</td>
+                        <td id="total-d1">0</td>
+                        <td id="total-sma">0</td>
+                        <td id="total-semua" class="text-primary fs-6">0</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="p-3 bg-light border-top small text-muted">
+            <em>*) Pustakawan adalah staf perpustakaan yang memiliki ijazah atau sertifikat kompetensi pada bidang ilmu perpustakaan.</em>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tbody = document.getElementById('tbody-tendik');
+        const btnTambah = document.getElementById('btn-tambah-tendik');
+
+        function hitungTotal() {
+            let colTotals = [0, 0, 0, 0, 0, 0, 0, 0];
+            let grandTotal = 0;
+
+            document.querySelectorAll('.baris-tendik').forEach(row => {
+                const inputs = row.querySelectorAll('.input-pendidikan');
+                let rowTotal = 0;
+
+                inputs.forEach((input, index) => {
+                    const val = parseInt(input.value) || 0;
+                    rowTotal += val;
+                    colTotals[index] += val;
+                });
+
+                row.querySelector('.total-baris').value = rowTotal;
+                grandTotal += rowTotal;
+            });
+
+            const totalIds = ['total-s3', 'total-s2', 'total-s1', 'total-d4', 'total-d3', 'total-d2', 'total-d1', 'total-sma'];
+            colTotals.forEach((total, index) => {
+                document.getElementById(totalIds[index]).textContent = total;
+            });
+            document.getElementById('total-semua').textContent = grandTotal;
+        }
+
+        function updateBaris() {
+            const baris = tbody.querySelectorAll('tr');
+            baris.forEach((tr, index) => {
+                tr.querySelector('.baris-nomor').textContent = index + 1;
+                const btnHapus = tr.querySelector('.btn-hapus-baris');
+                if (baris.length > 1) btnHapus.removeAttribute('disabled');
+                else btnHapus.setAttribute('disabled', 'true');
+            });
+            
+            // Re-attach event listeners
+            document.querySelectorAll('.input-pendidikan').forEach(input => {
+                input.removeEventListener('input', hitungTotal);
+                input.addEventListener('input', hitungTotal);
+            });
+            hitungTotal();
+        }
+
+        btnTambah.addEventListener('click', function() {
+            const barisBaru = tbody.querySelector('tr').cloneNode(true);
+            barisBaru.querySelector('input[name="jenis_tendik[]"]').value = '';
+            barisBaru.querySelectorAll('.input-pendidikan').forEach(input => input.value = '0');
+            barisBaru.querySelector('input[name="unit_kerja[]"]').value = '';
+            tbody.appendChild(barisBaru);
+            updateBaris();
+        });
+
+        tbody.addEventListener('click', function(e) {
+            const btnHapus = e.target.closest('.btn-hapus-baris');
+            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+                btnHapus.closest('tr').remove();
+                updateBaris();
+            }
+        });
+
+        updateBaris(); // Inisialisasi awal
+    });
+</script>
+{% endblock %}

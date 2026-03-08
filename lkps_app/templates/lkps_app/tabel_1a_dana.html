@@ -1,0 +1,133 @@
+{% extends 'lkps_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <div class="card card-modern border-top-teal">
+            <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="card-title fw-bold">Tabel 1.A.2 Sumber Pendanaan UPPS/PS</h3>
+                    <small class="text-muted">Dalam jutaan rupiah (Rp. Juta)</small>
+                </div>
+                <button class="btn btn-sm text-white" style="background-color: var(--lms-teal);" id="btn-tambah-sumber">
+                    <i class="fas fa-plus me-1"></i> Tambah Sumber
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="25%" class="text-start">Sumber Pendanaan</th>
+                                <th width="15%">TS-2</th>
+                                <th width="15%">TS-1</th>
+                                <th width="15%">TS</th>
+                                <th width="20%">Link Bukti</th>
+                                <th width="10%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-sumber">
+                            <tr>
+                                <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="sumber_dana[]" value="Mahasiswa (SPP)"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts2[]" value="0"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts1[]" value="0"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts[]" value="0"></td>
+                                <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_sumber[]" placeholder="https://..."></td>
+                                <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-sumber" disabled><i class="fas fa-trash"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="sumber_dana[]" value="Yayasan"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts2[]" value="0"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts1[]" value="0"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts[]" value="0"></td>
+                                <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_sumber[]" placeholder="https://..."></td>
+                                <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-sumber"><i class="fas fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="card card-modern border-top-orange">
+            <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
+                <div>
+                    <h3 class="card-title fw-bold">Tabel 1.A.3 Penggunaan Dana UPPS/PS</h3>
+                    <small class="text-muted">Dalam jutaan rupiah (Rp. Juta)</small>
+                </div>
+                <button class="btn btn-sm text-white" style="background-color: var(--pradita-orange);" id="btn-tambah-penggunaan">
+                    <i class="fas fa-plus me-1"></i> Tambah Penggunaan
+                </button>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="25%" class="text-start">Penggunaan Dana</th>
+                                <th width="15%">TS-2</th>
+                                <th width="15%">TS-1</th>
+                                <th width="15%">TS</th>
+                                <th width="20%">Link Bukti</th>
+                                <th width="10%">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-penggunaan">
+                            <tr>
+                                <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="guna_dana[]" value="Pendidikan"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts2[]" value="0"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts1[]" value="0"></td>
+                                <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts[]" value="0"></td>
+                                <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_guna[]" placeholder="https://..."></td>
+                                <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-guna" disabled><i class="fas fa-trash"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fungsi universal untuk add/remove row
+    function setupDynamicTable(tbodyId, btnAddId, btnRemoveClass) {
+        const tbody = document.getElementById(tbodyId);
+        const btnAdd = document.getElementById(btnAddId);
+
+        function checkDeleteButtons() {
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach((tr) => {
+                const btnHapus = tr.querySelector(`.${btnRemoveClass}`);
+                if (rows.length > 1) btnHapus.removeAttribute('disabled');
+                else btnHapus.setAttribute('disabled', 'true');
+            });
+        }
+
+        btnAdd.addEventListener('click', function() {
+            const firstRow = tbody.querySelector('tr');
+            const newRow = firstRow.cloneNode(true);
+            newRow.querySelectorAll('input[type="text"], input[type="url"]').forEach(input => input.value = '');
+            newRow.querySelectorAll('input[type="number"]').forEach(input => input.value = '0');
+            tbody.appendChild(newRow);
+            checkDeleteButtons();
+        });
+
+        tbody.addEventListener('click', function(e) {
+            const btnHapus = e.target.closest(`.${btnRemoveClass}`);
+            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+                btnHapus.closest('tr').remove();
+                checkDeleteButtons();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        setupDynamicTable('tbody-sumber', 'btn-tambah-sumber', 'btn-hapus-sumber');
+        setupDynamicTable('tbody-penggunaan', 'btn-tambah-penggunaan', 'btn-hapus-guna');
+    });
+</script>
+{% endblock %}
