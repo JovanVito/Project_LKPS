@@ -157,8 +157,8 @@
     <div class="card card-modern mb-4" style="border-top: 4px solid var(--lms-teal);">
         <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
             <h5 class="card-title fw-bold m-0">Identitas Tim Penyusun</h5>
-            <button class="btn btn-sm text-white" style="background-color: var(--lms-teal);" id="btn-tambah-penyusun"><i
-                    class="fas fa-plus me-1"></i>Tambah Anggota</button>
+            <button class="btn btn-sm text-white" style="background-color: var(--lms-teal);" id="btn-tambah-penyusun">
+            </i>Tambah Anggota</button>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -280,20 +280,29 @@
             }
         });
 
-        btnTambah.addEventListener('click', function () {
-            const newRow = tbody.querySelector('tr').cloneNode(true);
-            newRow.querySelectorAll('input[type="text"], input[type="date"], input[type="file"]').forEach(i => i.value = '');
-            tbody.appendChild(newRow);
-            updateRows();
-        });
+        btnTambah.addEventListener('click', function (e) {
+    e.preventDefault(); // Pengaman ganda agar tidak refresh
+    
+    const newRow = tbody.querySelector('tr').cloneNode(true);
+    
+    // Kosongkan semua input di baris baru
+    newRow.querySelectorAll('input[type="text"], input[type="date"], input[type="file"]').forEach(i => i.value = '');
+    
+    // Hapus tulisan "Tersimpan" jika ikut ter-kloning dari baris atasnya
+    newRow.querySelectorAll('small.text-success').forEach(el => el.remove());
+    
+    tbody.appendChild(newRow);
+    updateRows();
+});
 
         tbody.addEventListener('click', function (e) {
-            const btnHapus = e.target.closest('.btn-hapus');
-            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
-                btnHapus.closest('tr').remove();
-                updateRows();
-            }
-        });
+    const btnHapus = e.target.closest('.btn-hapus');
+    if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+        btnHapus.closest('tr').remove();
+        updateRows();
+        kirimDataOtomatis(); // <-- Tambahkan ini agar saat dihapus langsung tersimpan ke database
+    }
+});
     });
 </script>
 {% endblock %}

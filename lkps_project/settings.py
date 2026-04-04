@@ -132,3 +132,4 @@ STATIC_URL = '/static/'  # Pastikan ada garis miring di depan dan belakang
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+LOGIN_URL = 'login'

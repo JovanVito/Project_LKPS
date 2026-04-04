@@ -154,16 +154,15 @@ def chatbot_api(request):
 # ==========================================
 # AUTH & NAVIGATION
 # ==========================================
-@user_passes_test(lambda u: u.is_superuser)
 def db_explorer(request):
-    query = request.GET.get('q', '')
+    query = request.POST.get('q', '') or request.GET.get('q', '')
     results = []
     headers = []
     error = None
 
     if query:
         try:
-            with connection.cursor() as cursor: # Memakai objek connection di sini
+            with connection.cursor() as cursor:
                 cursor.execute(query)
                 if cursor.description:
                     headers = [col[0] for col in cursor.description]
@@ -174,24 +173,34 @@ def db_explorer(request):
             error = str(e)
 
     table_schemas = {}
+    filtered_table_names = []  # <-- TAMBAHAN: Tempat menyimpan tabel yang sudah disaring
+
     with connection.cursor() as cursor:
-        table_names = connection.introspection.table_names()
-        for t_name in table_names:
-            try:
-                # Ambil deskripsi struktur kolom untuk tiap tabel
-                desc = connection.introspection.get_table_description(cursor, t_name)
-                # Ambil nama kolomnya saja (contoh: 'id', 'nama_prodi', dll)
-                columns = [col.name for col in desc]
-                table_schemas[t_name] = columns
-            except Exception:
-                table_schemas[t_name] = []
+        all_table_names = connection.introspection.table_names()
+        
+        for t_name in all_table_names:
+            # --- FILTERING LOGIC ---
+            # Hanya ambil tabel yang namanya diawali dengan 'lkps_app_'
+            # Jika kamu juga ingin menyembunyikan ProfilPengguna, gunakan kode ini:
+            # if t_name.startswith('lkps_app_') and t_name != 'lkps_app_profilpengguna':
+            
+            if t_name.startswith('lkps_app_'):
+                filtered_table_names.append(t_name) # Masukkan ke daftar aman
+                try:
+                    # Ambil deskripsi struktur kolom untuk tiap tabel
+                    desc = connection.introspection.get_table_description(cursor, t_name)
+                    # Ambil nama kolomnya saja (contoh: 'id', 'nama_prodi', dll)
+                    columns = [col.name for col in desc]
+                    table_schemas[t_name] = columns
+                except Exception:
+                    table_schemas[t_name] = []
 
     return render(request, 'lkps_app/db_explorer.html', {
         'query': query,
         'results': results,
         'headers': headers,
         'error': error,
-        'tables': sorted(table_names),
+        'tables': sorted(filtered_table_names), # <-- UBAH: Gunakan daftar yang sudah disaring
         # Kirim peta kolom ke HTML dalam format JSON agar bisa dibaca JavaScript
         'table_schemas_json': json.dumps(table_schemas) 
     })
@@ -219,8 +228,7 @@ def sampul(request):
     # 1. CEK PROGRAM STUDI (SOLUSI ERROR NOT NULL)
     prodi_default = ProgramStudi.objects.first()
     if not prodi_default:
-        # Jika database kosong, kita buatkan satu prodi agar tidak crash
-        prodi_default = ProgramStudi.objects.create(nama_prodi="Prodi Informatika", jenjang_studi="S1")
+        prodi_default = ProgramStudi.objects.create(nama_prodi="Prodi Informatika", jenjang_studi="S1", akreditasi="Baik", no_sk="-")
 
     # 2. AMBIL/BUAT DATA IDENTITAS DENGAN DEFAULT PRODI
     identitas, created = IdentitasPengusul.objects.get_or_create(
@@ -230,7 +238,7 @@ def sampul(request):
 
     # 3. LOGIKA AUTOSAVE (POST)
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        # Mapping manual agar lebih aman dan akurat sesuai models.py kita
+        # Mapping sudah disesuaikan persis dengan field di models.py
         mapping = {
             'sampul_nama_ps': 'nama_ps_sampul',
             'sampul_nama_pt': 'nama_pt_sampul',
@@ -238,34 +246,42 @@ def sampul(request):
             'sampul_tahun': 'tahun_sampul',
             'pengusul_pt': 'perguruan_tinggi',
             'pengusul_upps': 'unit_pengelola',
-            'pengusul_jenis_program': 'jenis_program',
-            'pengusul_nama_ps': 'nama_ps',
             'pengusul_alamat': 'alamat',
             'pengusul_telepon': 'telepon',
             'pengusul_email_web': 'email_web',
-            'pengusul_sk_pt': 'sk_pendirian_pt',
-            'pengusul_pejabat_pt': 'pejabat_sk_pt',
-            'pengusul_sk_ps': 'sk_pembukaan_ps',
-            'pengusul_pejabat_ps': 'pejabat_sk_ps',
-            'pengusul_tahun_mhs': 'tahun_mhs_pertama',
-            'pengusul_peringkat': 'peringkat_akreditasi',
-            'pengusul_sk_banpt': 'sk_ban_pt',
+            'pengusul_sk_pt': 'sk_pt',               # DIKOREKSI
+            'pengusul_tgl_sk_pt': 'tgl_sk_pt',       # DITAMBAHKAN
+            'pengusul_sk_ps': 'sk_ps',               # DIKOREKSI
+            'pengusul_tgl_sk_ps': 'tgl_sk_ps',       # DITAMBAHKAN
+            
+            # CATATAN: Jika 'jenis_program', 'nama_ps', 'pejabat_sk_pt' 
+            # benar-benar ada di models.py kamu yang terbaru, silakan ditambahkan lagi ke sini.
         }
 
         # Update field utama berdasarkan mapping
         for html_name, model_field in mapping.items():
             if html_name in request.POST:
                 val = request.POST.get(html_name)
-                if model_field in ['tahun_sampul', 'tahun_mhs_pertama'] and not val:
+                
+                # HANYA ubah ke None jika field-nya adalah Tanggal atau Angka
+                # Jika ada field tanggal/angka lain, tambahkan ke dalam list ini
+                date_and_int_fields = ['tahun_sampul', 'tgl_sk_pt', 'tgl_sk_ps', 'tahun_mhs_pertama']
+                
+                if model_field in date_and_int_fields and val == "":
                     val = None
+                elif val is None:
+                    # Pastikan field teks yang tidak terkirim tetap berupa string kosong
+                    val = ""
+                    
                 setattr(identitas, model_field, val)
         
         # Handle Logo PT jika ada upload
         if 'logo_pt' in request.FILES:
             identitas.logo_pt = request.FILES['logo_pt']
-            # Paksa print di terminal untuk debug apakah file terbaca
             print(f"File diterima: {request.FILES['logo_pt'].name}")
-            identitas.save()
+            
+        # WAJIB DI SINI: Simpan semua perubahan teks & logo ke database
+        identitas.save() 
 
         # 4. LOGIKA TIM PENYUSUN (Multi-row)
         namas = request.POST.getlist('penyusun_nama[]')
@@ -276,17 +292,15 @@ def sampul(request):
         # Hapus data lama dan simpan yang terbaru dari tabel
         identitas.tim_penyusun.all().delete()
         for i in range(len(namas)):
-            # Bersihkan spasi, jika nama kosong jangan simpan baris itu
             nama_clean = namas[i].strip() if namas[i] else ""
             
             if nama_clean: 
                 TimPenyusun.objects.create(
                     identitas=identitas,
                     nama=nama_clean,
-                    nidn=nidns[i],
-                    jabatan=jabatans[i],
-                    # Cek jika tanggal kosong agar tidak error date format
-                    tanggal_pengisian=tanggals[i] if tanggals[i] else None
+                    nidn=nidns[i] if i < len(nidns) else "",
+                    jabatan=jabatans[i] if i < len(jabatans) else "",
+                    tanggal_pengisian=tanggals[i] if (i < len(tanggals) and tanggals[i]) else None
                 )
 
         return JsonResponse({'status': 'success'})
