@@ -33,24 +33,24 @@
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted text-start w-100">Nama Program Studi</label>
                         <input type="text" class="form-control text-center fw-bold auto-save-input"
-                            name="sampul_nama_ps" value="{{ data.nama_ps_sampul|default:'' }}">
+                            name="sampul_nama_ps" value="{{ data.nama_ps_sampul|default_if_none:'' }}">
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-muted text-start w-100">Nama Perguruan
                             Tinggi</label>
                         <input type="text" class="form-control text-center fw-bold auto-save-input"
-                            name="sampul_nama_pt" placeholder="Contoh: UNIVERSITAS PRADITA">
+                            name="sampul_nama_pt" placeholder="Contoh: UNIVERSITAS PRADITA" value="{{ data.nama_pt_sampul|default_if_none:'' }}">
                     </div>
                     <div class="row">
                         <div class="col-8">
                             <label class="form-label small fw-bold text-muted text-start w-100">Kota</label>
                             <input type="text" class="form-control text-center auto-save-input" name="sampul_kota"
-                                placeholder="Tangerang">
+                                placeholder="Tangerang" value="{{ data.kota_sampul|default_if_none:'' }}">
                         </div>
                         <div class="col-4">
                             <label class="form-label small fw-bold text-muted text-start w-100">Tahun</label>
                             <input type="number" class="form-control text-center auto-save-input" name="sampul_tahun"
-                                value="2026">
+                                value="{{ data.tahun_sampul|default_if_none:'' }}">
                         </div>
                     </div>
                 </div>
@@ -66,37 +66,37 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Perguruan Tinggi</label>
-                            <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_pt">
+                            <input type="text" class="form-control form-control-sm auto-save-input" name="pengusul_pt" value="{{ data.perguruan_tinggi|default_if_none:'' }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Unit Pengelola Program Studi</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_upps">
+                                name="pengusul_upps" value="{{ data.unit_pengelola|default_if_none:'' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Jenis Program</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_jenis_program">
+                                name="pengusul_jenis_program" value="{{ data.jenis_program|default_if_none:'' }}">
                         </div>
                         <div class="col-md-8">
                             <label class="form-label small fw-bold text-muted">Nama Program Studi</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_nama_ps">
+                                name="pengusul_nama_ps" value="{{ data.nama_ps|default_if_none:'' }}">
                         </div>
                         <div class="col-12">
                             <label class="form-label small fw-bold text-muted">Alamat</label>
                             <textarea class="form-control form-control-sm auto-save-input" name="pengusul_alamat"
-                                rows="2"></textarea>
+                                rows="2">{{ data.alamat|default_if_none:'' }}</textarea>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">Nomor Telepon</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_telepon">
+                                name="pengusul_telepon" value="{{ data.telepon|default_if_none:'' }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">E-Mail dan Website</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_email_web">
+                                name="pengusul_email_web" value="{{ data.email_web|default_if_none:'' }}">
                         </div>
 
                         <hr class="my-3 text-muted">
@@ -104,49 +104,49 @@
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Nomor SK Pendirian PT</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_sk_pt">
+                                name="pengusul_sk_pt" value="{{ data.sk_pt|default_if_none:'' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Tgl SK Pendirian PT</label>
                             <input type="date" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_tgl_sk_pt">
+                                name="pengusul_tgl_sk_pt" value="{{ data.tgl_sk_pt|date:'Y-m-d' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Pejabat Penandatangan</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_pejabat_pt">
+                                name="pengusul_pejabat_pt" value="{{ data.pejabat_sk_pt|default_if_none:'' }}">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Nomor SK Pembukaan PS</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_sk_ps">
+                                name="pengusul_sk_ps" value="{{ data.sk_ps|default_if_none:'' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Tgl SK Pembukaan PS</label>
                             <input type="date" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_tgl_sk_ps">
+                                name="pengusul_tgl_sk_ps" value="{{ data.tgl_sk_ps|date:'Y-m-d' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Pejabat Penandatangan</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_pejabat_ps">
+                                name="pengusul_pejabat_ps" value="{{ data.pejabat_sk_ps|default_if_none:'' }}">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Tahun Pertama Menerima Mhs</label>
                             <input type="number" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_tahun_mhs">
+                                name="pengusul_tahun_mhs" value="{{ data.tahun_mhs_pertama|default_if_none:'' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Peringkat Akreditasi PS</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_peringkat">
+                                name="pengusul_peringkat" value="{{ data.peringkat_akreditasi|default_if_none:'' }}">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Nomor SK BAN-PT</label>
                             <input type="text" class="form-control form-control-sm auto-save-input"
-                                name="pengusul_sk_banpt">
+                                name="pengusul_sk_banpt" value="{{ data.sk_ban_pt|default_if_none:'' }}">
                         </div>
                     </div>
                 </div>
@@ -158,7 +158,7 @@
         <div class="card-header card-header-modern d-flex justify-content-between align-items-center">
             <h5 class="card-title fw-bold m-0">Identitas Tim Penyusun</h5>
             <button class="btn btn-sm text-white" style="background-color: var(--lms-teal);" id="btn-tambah-penyusun">
-            </i>Tambah Anggota</button>
+            <i class="fas fa-plus"></i> Tambah Anggota</button>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -236,42 +236,40 @@
                 else btnHapus.setAttribute('disabled', 'true');
             });
         }
-        // Tambahkan fungsi ini di dalam <script> sampul.html kamu
+        
         function kirimDataOtomatis() {
-    const formElement = document.getElementById('form-sampul');
-    const statusLabel = document.getElementById('save-status');
-    
-    // Tampilkan indikator loading
-    statusLabel.style.display = 'inline-block';
-    statusLabel.innerHTML = '<i class="fas fa-sync-alt fa-spin me-1"></i> Menyimpan...';
-    statusLabel.className = 'badge bg-light text-muted fw-normal shadow-sm';
-
-    const formData = new FormData(formElement);
-
-    fetch(window.location.href, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            // Jangan tambahkan 'Content-Type' manual jika mengirim FormData berisi file!
-            // Browser akan mengaturnya otomatis sebagai multipart/form-data.
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.status === 'success') {
-            statusLabel.innerHTML = '<i class="fas fa-check-circle me-1"></i> Tersimpan otomatis';
-            statusLabel.className = 'badge bg-success-subtle text-success fw-normal shadow-sm';
+            const formElement = document.getElementById('form-sampul');
+            const statusLabel = document.getElementById('save-status');
             
-            // Sembunyikan pesan setelah 3 detik
-            setTimeout(() => { statusLabel.style.display = 'none'; }, 3000);
+            // Tampilkan indikator loading
+            statusLabel.style.display = 'inline-block';
+            statusLabel.innerHTML = '<i class="fas fa-sync-alt fa-spin me-1"></i> Menyimpan...';
+            statusLabel.className = 'badge bg-light text-muted fw-normal shadow-sm';
+
+            const formData = new FormData(formElement);
+
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    statusLabel.innerHTML = '<i class="fas fa-check-circle me-1"></i> Tersimpan otomatis';
+                    statusLabel.className = 'badge bg-success-subtle text-success fw-normal shadow-sm';
+                    
+                    // Sembunyikan pesan setelah 3 detik
+                    setTimeout(() => { statusLabel.style.display = 'none'; }, 3000);
+                }
+            })
+            .catch(error => {
+                statusLabel.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> Gagal menyimpan';
+                statusLabel.className = 'badge bg-danger-subtle text-danger fw-normal shadow-sm';
+            });
         }
-    })
-    .catch(error => {
-        statusLabel.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> Gagal menyimpan';
-        statusLabel.className = 'badge bg-danger-subtle text-danger fw-normal shadow-sm';
-    });
-}
 
         // Trigger saat input kehilangan fokus (blur) atau isi berubah (change)
         document.addEventListener('change', function (e) {
@@ -280,29 +278,34 @@
             }
         });
 
+        // PENGAMAN EKSTRA: Paksa simpan saat user mau pindah halaman / menutup tab
+        window.addEventListener('beforeunload', function (e) {
+            kirimDataOtomatis();
+        });
+
         btnTambah.addEventListener('click', function (e) {
-    e.preventDefault(); // Pengaman ganda agar tidak refresh
-    
-    const newRow = tbody.querySelector('tr').cloneNode(true);
-    
-    // Kosongkan semua input di baris baru
-    newRow.querySelectorAll('input[type="text"], input[type="date"], input[type="file"]').forEach(i => i.value = '');
-    
-    // Hapus tulisan "Tersimpan" jika ikut ter-kloning dari baris atasnya
-    newRow.querySelectorAll('small.text-success').forEach(el => el.remove());
-    
-    tbody.appendChild(newRow);
-    updateRows();
-});
+            e.preventDefault(); 
+            
+            const newRow = tbody.querySelector('tr').cloneNode(true);
+            
+            // Kosongkan semua input di baris baru
+            newRow.querySelectorAll('input[type="text"], input[type="date"], input[type="file"]').forEach(i => i.value = '');
+            
+            // Hapus tulisan "Tersimpan" jika ikut ter-kloning
+            newRow.querySelectorAll('small.text-success').forEach(el => el.remove());
+            
+            tbody.appendChild(newRow);
+            updateRows();
+        });
 
         tbody.addEventListener('click', function (e) {
-    const btnHapus = e.target.closest('.btn-hapus');
-    if (btnHapus && !btnHapus.hasAttribute('disabled')) {
-        btnHapus.closest('tr').remove();
-        updateRows();
-        kirimDataOtomatis(); // <-- Tambahkan ini agar saat dihapus langsung tersimpan ke database
-    }
-});
+            const btnHapus = e.target.closest('.btn-hapus');
+            if (btnHapus && !btnHapus.hasAttribute('disabled')) {
+                btnHapus.closest('tr').remove();
+                updateRows();
+                kirimDataOtomatis(); 
+            }
+        });
     });
 </script>
 {% endblock %}

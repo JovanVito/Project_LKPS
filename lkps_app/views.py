@@ -12,6 +12,8 @@ from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import user_passes_test
 from django.db import connection
 from docxtpl import DocxTemplate
+from docxtpl import InlineImage
+from docx.shared import Mm
 from .models import (
     IdentitasPengusul, TimPenyusun, ProgramStudi, ProfilPengguna,
     Tabel_1A1, Tabel_1A2_Sumber, Tabel_1A3_Penggunaan, Tabel_1A4, Tabel_1A5,
@@ -28,12 +30,14 @@ def export_lkps_word(request):
         template_path = str(settings.BASE_DIR / 'static' / 'lkps_app' / 'word_templates' / 'Master_Format_LKPS.docx')
         
         # Buka template Word
-        from docxtpl import DocxTemplate # Pastikan library ini sudah di-install (pip install docxtpl)
         doc = DocxTemplate(template_path)
+
+        # Ambil data identitas terpisah agar bisa kita cek logonya
+        identitas_data = IdentitasPengusul.objects.first()
 
         # 3. Bungkus semua data agar bisa dibaca oleh file Word
         context = {
-            'identitas': IdentitasPengusul.objects.first(),
+            'identitas': identitas_data or {},
             'tim_penyusun': TimPenyusun.objects.all(),
             # Kriteria 1
             't1a1': Tabel_1A1.objects.all(),
@@ -72,6 +76,22 @@ def export_lkps_word(request):
             't6': Tabel_6_Misi.objects.first(),
         }
         
+        # --- LOGIKA KHUSUS UNTUK MEMUNCULKAN LOGO GAMBAR ---
+        if identitas_data and identitas_data.logo_pt:
+            try:
+                # Ambil path fisik dari file gambar di komputermu
+                image_path = identitas_data.logo_pt.path 
+                
+                # Ubah menjadi objek gambar Word dengan lebar 40 mm (silakan sesuaikan ukurannya)
+                # Kemudian masukkan ke variabel 'logo' (sesuai dengan tag {{ logo }} di template Word)
+                context['logo'] = InlineImage(doc, image_path, width=Mm(40))
+            except Exception as e:
+                print(f"Gagal memuat gambar logo: {e}")
+                context['logo'] = '' # Kosongkan jika gambar tidak ditemukan di folder
+        else:
+            context['logo'] = '' # Kosongkan jika user belum mengupload logo
+        # ---------------------------------------------------
+
         # 4. SUNTIKKAN DATA KE DALAM WORD
         doc.render(context)
 
