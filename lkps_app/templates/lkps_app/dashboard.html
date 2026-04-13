@@ -70,7 +70,7 @@
 
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <div class="card card-modern h-100">
+            <div class="card card-modern h-100 mb-4">
                 <div class="card-header card-header-modern">
                     <h5 class="card-title m-0"><i class="fas fa-file-excel text-success me-2"></i> Import Data Excel</h5>
                 </div>
@@ -85,11 +85,25 @@
                         <input type="file" id="file-input" class="d-none" accept=".xlsx, .xls, .csv">
                     </div>
                     
-                    <div class="mt-3" id="upload-status">
-                        </div>
+                    <div class="mt-3" id="upload-status"></div>
                 </div>
             </div>
-        </div>
+
+            <div class="card card-modern border-top-teal shadow-sm">
+                <div class="card-header card-header-modern">
+                    <h5 class="card-title m-0"><i class="fas fa-satellite-dish text-success me-2"></i> Integrasi Data LPPM (API)</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-3">
+                        Tarik data otomatis dari server MySQL Lembaga Penelitian dan Pengabdian Masyarakat (LPPM)
+                    </p>
+                    <button id="btn-sync-lppm" class="btn btn-sm text-white shadow-sm px-4 py-2" style="background-color: var(--pradita-navy);">
+                        <i class="fas fa-cloud-download-alt me-2"></i> Mulai Sinkronisasi Data LPPM
+                    </button>
+                    <div id="sync-status" class="mt-3 small fw-medium"></div>
+                </div>
+            </div>
+            </div>
 
         <div class="col-lg-4 mb-4">
             <div class="card card-modern border-top-orange h-100">
@@ -104,13 +118,13 @@
                         <i class="fas fa-edit text-primary me-2"></i> Lanjutkan Pengisian Data
                     </a>
                     <button class="btn btn-light w-100 text-start mb-3 border d-flex align-items-center py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalPusatUnduhan">
-    <i class="fas fa-download text-success me-3"></i> 
-    <span class="fw-medium text-dark">Unduh Template Excel</span>
-</button>
+                        <i class="fas fa-download text-success me-3"></i> 
+                        <span class="fw-medium text-dark">Unduh Template Excel</span>
+                    </button>
                     <hr class="my-1 text-muted opacity-25">
                     <button id="btn-generate" class="btn text-white px-4 py-2 shadow-sm" style="background-color: var(--pradita-navy);">
-    <i class="fas fa-file-word me-2"></i> Generate ke Word (Final)
-</button>
+                        <i class="fas fa-file-word me-2"></i> Generate ke Word (Final)
+                    </button>
                 </div>
             </div>
         </div>
@@ -122,10 +136,8 @@
     const fileInput = document.getElementById('file-input');
     const uploadStatus = document.getElementById('upload-status');
 
-    // Memicu input file saat area diklik
     dropZone.addEventListener('click', () => fileInput.click());
 
-    // Efek visual saat file ditarik ke area
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.style.backgroundColor = '#e2e8f0';
@@ -137,7 +149,6 @@
         dropZone.style.borderColor = '#cbd5e1';
     });
 
-    // Menangani file yang dijatuhkan atau dipilih
     const handleFiles = (files) => {
         if (files.length > 0) {
             const file = files[0];
@@ -248,18 +259,14 @@ document.addEventListener('DOMContentLoaded', function() {
         btnGenerate.addEventListener('click', function() {
             const originalText = this.innerHTML;
             
-            // 1. Ubah jadi tombol loading
             this.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Memproses Dokumen...';
             this.classList.add('disabled');
             this.style.opacity = '0.8';
 
-            // 2. Simulasi proses dari Backend (misal 3 detik)
             setTimeout(() => {
-                // 3. Tampilan Sukses
                 this.innerHTML = '<i class="fas fa-check-circle me-2"></i>Berhasil Diunduh!';
-                this.style.backgroundColor = '#0e6333'; // Warna Hijau Sukses
+                this.style.backgroundColor = '#0e6333'; 
                 
-                // 4. Kembalikan tombol ke kondisi semula setelah 2.5 detik
                 setTimeout(() => {
                     this.innerHTML = originalText;
                     this.style.backgroundColor = 'var(--pradita-navy)';
@@ -269,6 +276,92 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             }, 3000);
         });
+    }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const btnSync = document.getElementById('btn-sync-lppm');
+    const statusDiv = document.getElementById('sync-status');
+
+    if (btnSync) {
+        btnSync.addEventListener('click', async function() {
+            // Animasi Loading Tombol
+            const originalText = btnSync.innerHTML;
+            btnSync.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Menghubungi LPPM...';
+            btnSync.classList.add('disabled');
+            statusDiv.innerHTML = '';
+
+            // Data Dummy yang akan dikirim ke views.py (Simulasi Server LPPM)
+            const payloadLPPM = {
+                "source": "MySQL_LPPM_Server",
+                "timestamp": new Date().toISOString(),
+                "data_penelitian": [
+                    {
+                        "nama_dosen": "Dr. Budi Santoso",
+                        "judul_penelitian": "Implementasi AI pada LKPS",
+                        "sumber_dana": "Internal Perguruan Tinggi",
+                        "tahun": 2026
+                    }
+                ]
+            };
+
+            try {
+                // Tembak Data JSON ke Endpoint yang sudah kita buat
+                const response = await fetch('/api/sync-lppm/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') // Kunci Keamanan Django
+                    },
+                    body: JSON.stringify(payloadLPPM)
+                });
+
+                const result = await response.json();
+
+                // Tangani Balasan dari Server
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success py-2 mb-0 border-0 shadow-sm">
+                            <i class="fas fa-check-circle me-2"></i> ${result.message}
+                        </div>`;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-danger py-2 mb-0 border-0 shadow-sm">
+                            <i class="fas fa-times-circle me-2"></i> Error: ${result.message}
+                        </div>`;
+                }
+
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-warning py-2 mb-0 border-0 shadow-sm">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Gagal terhubung ke URL '/api/sync-lppm/'. Pastikan server berjalan.
+                    </div>`;
+            } finally {
+                // Kembalikan tombol seperti semula
+                setTimeout(() => {
+                    btnSync.innerHTML = originalText;
+                    btnSync.classList.remove('disabled');
+                }, 1000);
+            }
+        });
+    }
+
+    // Fungsi Pengambil Token CSRF (Wajib ada di setiap file JS Django yang melakukan POST)
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 });
 </script>

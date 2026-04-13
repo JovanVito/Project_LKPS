@@ -1,0 +1,46 @@
+{% extends 'lkps_app/base.html' %}
+{% block content %}
+<div class="card card-modern border-top-blue shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="fw-bold text-dark m-0">Tabel 2.A.1: Mahasiswa Reguler dan Lainnya</h5>
+        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2a1')">
+            <i class="fas fa-plus me-1"></i> Tambah Tahun
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0" style="min-width: 1200px;">
+                <thead class="table-light text-center small">
+                    <tr>
+                        <th rowspan="2" class="align-middle">Tahun Akademik</th><th rowspan="2" class="align-middle">Daya Tampung</th>
+                        <th colspan="4">Jumlah Calon Pendaftar</th><th colspan="4">Jumlah Mahasiswa Baru</th><th colspan="4">Jumlah Mahasiswa Aktif</th>
+                    </tr>
+                    <tr>
+                        <th>Reguler</th><th>RPL</th><th>Afirmasi</th><th>Khusus</th>
+                        <th>Reguler</th><th>RPL</th><th>Afirmasi</th><th>Khusus</th>
+                        <th>Reguler</th><th>RPL</th><th>Afirmasi</th><th>Khusus</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-2a1">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="TS/TS-1"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

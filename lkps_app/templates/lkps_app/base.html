@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
     <link rel="stylesheet" href="{% static 'lkps_app/css/style.css' %}">
 </head>
 <body>
@@ -22,77 +25,96 @@
             </div>
         </div>
        <ul class="sidebar-nav list-unstyled mt-4">
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'dashboard' %}" class="sidebar-link active">
-                    <i class="fas fa-home"></i> Dashboard Utama
-                </a>
-            </li>
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'program_studi' %}" class="sidebar-link">
-                    <i class="fas fa-university"></i> Daftar Program Studi
-                </a>
-            </li>
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'manajemen_user' %}" class="sidebar-link">
-                    <i class="fas fa-users-cog"></i> Manajemen Pengguna
-                </a>
-            </li>
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'dashboard' %}" class="sidebar-link active">
+            <i class="fas fa-home"></i> Dashboard Utama
+        </a>
+    </li>
+    
+    <hr class="border-secondary my-3 opacity-25">
+    <li class="px-3 mb-2 text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">Kriteria Akreditasi</li>
 
-            <hr class="border-secondary my-3 opacity-25">
-            <li class="px-3 mb-2 text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">Kriteria LKPS</li>
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'sampul' %}" class="sidebar-link">
+            <i class="fas fa-id-card"></i> Identitas Laporan
+        </a>
+    </li>
 
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'sampul' %}" class="sidebar-link">
-                    <i class="fas fa-id-card"></i> Identitas Laporan
-                </a>
-            </li>
-            <li class="sidebar-item mb-2">
-                <a href="#kriteria1" data-bs-toggle="collapse" class="sidebar-link d-flex justify-content-between align-items-center" aria-expanded="false">
-                    <div><i class="fas fa-sitemap"></i> Kriteria 1: Budaya Mutu</div>
-                    <i class="fas fa-chevron-down"></i>
-                </a>
-                <ul class="collapse sidebar-submenu" id="kriteria1">
-                    <li class="sidebar-item"><a href="{% url 'tabel_1a1' %}" class="sidebar-link">Tabel 1.A.1 Pimpinan & Tupoksi</a></li>
-                    <li class="sidebar-item"><a href="{% url 'tabel_1a_dana' %}" class="sidebar-link">Tabel 1.A.2 & 1.A.3 Pendanaan</a></li>
-                    <li class="sidebar-item"><a href="{% url 'tabel_1a4' %}" class="sidebar-link">Tabel 1.A.4 Beban DTPR</a></li>
-                    <li class="sidebar-item"><a href="{% url 'tabel_1a5' %}" class="sidebar-link">Tabel 1.A.5 Tendik</a></li>
-                </ul>
-            </li>
-
-            <li class="sidebar-item mb-2">
-                <a href="#kriteria2" data-bs-toggle="collapse" class="sidebar-link d-flex justify-content-between align-items-center" aria-expanded="false">
-                    <div><i class="fas fa-user-graduate"></i> Kriteria 2: Pendidikan</div>
-                    <i class="fas fa-chevron-down"></i>
-                </a>
-                <ul class="collapse sidebar-submenu" id="kriteria2">
-                    <li class="sidebar-item"><a href="{% url 'tabel_2a_mahasiswa' %}" class="sidebar-link">Tabel 2.A Data Mahasiswa</a></li>
-                    <li class="sidebar-item"><a href="{% url 'tabel_2b_kurikulum' %}" class="sidebar-link">Tabel 2.B.1 - 2.B.3 Kurikulum</a></li>
-                    <li class="sidebar-item"><a href="{% url 'tabel_2b_lulusan' %}" class="sidebar-link">Tabel 2.B.4 - 2.B.6 Lulusan</a></li>
-                </ul>
-            </li>
-
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'tabel_3_penelitian' %}" class="sidebar-link">
-                    <i class="fas fa-flask"></i> Kriteria 3: Penelitian
-                </a>
-            </li>
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'tabel_4_pkm' %}" class="sidebar-link">
-                    <i class="fas fa-hands-helping"></i> Kriteria 4: PkM
-                </a>
-            </li>
-
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'tabel_5_akuntabilitas' %}" class="sidebar-link">
-                    <i class="fas fa-building"></i> Kriteria 5: Akuntabilitas
-                </a>
-            </li>
-            <li class="sidebar-item mb-2">
-                <a href="{% url 'tabel_6_misi' %}" class="sidebar-link">
-                    <i class="fas fa-bullseye"></i> Kriteria 6: Misi
-                </a>
-            </li>
+    <li class="sidebar-item mb-2">
+        <a href="#kriteria1" data-bs-toggle="collapse" class="sidebar-link d-flex justify-content-between align-items-center" aria-expanded="false">
+            <div><i class="fas fa-sitemap"></i> Kriteria 1: Tata Pamong</div>
+            <i class="fas fa-chevron-down"></i>
+        </a>
+        <ul class="collapse sidebar-submenu" id="kriteria1">
+            <li class="sidebar-item"><a href="{% url 'tabel_1a1' %}" class="sidebar-link">1.A.1 Personel UPPS</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_1a_dana' %}" class="sidebar-link">1.A.2 & 1.A.3 Pendanaan</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_1a4' %}" class="sidebar-link">1.A.4 Beban DTPR</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_1a5' %}" class="sidebar-link">1.A.5 Tenaga Kependidikan</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_1b' %}" class="sidebar-link">1.B Unit SPMI</a></li>
         </ul>
+    </li>
+
+    <li class="sidebar-item mb-2">
+        <a href="#kriteria2" data-bs-toggle="collapse" class="sidebar-link d-flex justify-content-between align-items-center" aria-expanded="false">
+            <div><i class="fas fa-user-graduate"></i> Kriteria 2: Mahasiswa</div>
+            <i class="fas fa-chevron-down"></i>
+        </a>
+        <ul class="collapse sidebar-submenu" id="kriteria2">
+            <li class="sidebar-item"><a href="{% url 'tabel_2a1' %}" class="sidebar-link">2.A.1 Mahasiswa Reguler</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2a2' %}" class="sidebar-link">2.A.2 Asal Mahasiswa</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2a3' %}" class="sidebar-link">2.A.3 Kondisi Mahasiswa</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2b1' %}" class="sidebar-link">2.B.1 Isi Kurikulum</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2b2' %}" class="sidebar-link">2.B.2 Pemetaan CPL</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2b3' %}" class="sidebar-link">2.B.3 Pemenuhan CPL</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2b4' %}" class="sidebar-link">2.B.4 Masa Tunggu</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2b5' %}" class="sidebar-link">2.B.5 Bidang Kerja</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2b6' %}" class="sidebar-link">2.B.6 Kepuasan Pengguna</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2c' %}" class="sidebar-link">2.C Fleksibilitas Belajar</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_2d' %}" class="sidebar-link">2.D Rekognisi Kompetensi</a></li>
+        </ul>
+    </li>
+
+    <li class="sidebar-item mb-2">
+        <a href="#kriteria3" data-bs-toggle="collapse" class="sidebar-link d-flex justify-content-between align-items-center" aria-expanded="false">
+            <div><i class="fas fa-flask"></i> Kriteria 3: SDM & Penelitian</div>
+            <i class="fas fa-chevron-down"></i>
+        </a>
+        <ul class="collapse sidebar-submenu" id="kriteria3">
+            <li class="sidebar-item"><a href="{% url 'tabel_3_penelitian' %}" class="sidebar-link">3.A.1 - 3.A.2 Sarana & Penelitian</a></li>
+            <li class="sidebar-item"><a href="{% url 'tabel_3a3' %}" class="sidebar-link">3.A.3 Pengembangan DTPR</a></li>
+            </ul>
+    </li>
+
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'tabel_4_pkm' %}" class="sidebar-link">
+            <i class="fas fa-hands-helping"></i> Kriteria 4: PkM
+        </a>
+    </li>
+
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'tabel_5_akuntabilitas' %}" class="sidebar-link">
+            <i class="fas fa-building"></i> Kriteria 5: Sarana & Prasarana
+        </a>
+    </li>
+
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'tabel_6' %}" class="sidebar-link">
+            <i class="fas fa-bullseye"></i> Kriteria 6: Visi & Misi
+        </a>
+    </li>
+    
+    <hr class="border-secondary my-3 opacity-25">
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'program_studi' %}" class="sidebar-link">
+            <i class="fas fa-university"></i> Daftar Program Studi
+        </a>
+    </li>
+    <li class="sidebar-item mb-2">
+        <a href="{% url 'manajemen_user' %}" class="sidebar-link">
+            <i class="fas fa-users-cog"></i> Manajemen Pengguna
+        </a>
+    </li>
+</ul>
     </aside>
 
     <div class="main-content">
@@ -107,19 +129,19 @@
                         <i class="fas fa-user-circle text-primary me-2"></i> User Program Studi
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
-    <li>
-        <a class="dropdown-item py-2" href="#" onclick="alert('Pengaturan segera hadir');">
-            <i class="fas fa-cog me-2 text-muted"></i> Pengaturan Akun
-        </a>
-    </li>
-    <li><hr class="dropdown-divider"></li>
-    
-    <li>
-        <a class="dropdown-item text-danger py-2 fw-bold" href="{% url 'logout' %}">
-            <i class="fas fa-sign-out-alt me-2"></i> Keluar
-        </a>
-    </li>
-</ul>
+                        <li>
+                            <a class="dropdown-item py-2" href="#" onclick="alert('Pengaturan segera hadir');">
+                                <i class="fas fa-cog me-2 text-muted"></i> Pengaturan Akun
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        
+                        <li>
+                            <a class="dropdown-item text-danger py-2 fw-bold" href="{% url 'logout' %}">
+                                <i class="fas fa-sign-out-alt me-2"></i> Keluar
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </header>
@@ -132,7 +154,79 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script src="{% static 'lkps_app/js/autosave.js' %}"></script>
+
+<script>
+    // 1. Fungsi Tambah Baris untuk Tabel-Tabel Baru
+    function tambahBaris(tbodyId) {
+        const tbody = document.getElementById(tbodyId);
+        if(!tbody) return;
+        const barisPertama = tbody.querySelector('tr');
+        if(!barisPertama) return;
+        const clone = barisPertama.cloneNode(true);
+        // Kosongkan value
+        clone.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        clone.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+        tbody.appendChild(clone);
+    }
+
+    // 2. Mesin Auto-Populate dari Master Excel (Dashboard)
+    document.addEventListener('DOMContentLoaded', function() {
+        const stored = localStorage.getItem('lkps_master_data');
+        if(stored) {
+            const masterData = JSON.parse(stored);
+
+            // Mapping Excel Sheet -> HTML ID (Mencakup tabel lama & baru)
+            const sheetMap = {
+                'Tabel_1B_SPMI': 'tbody-1b',
+                'Tabel_2A1_Mahasiswa': 'tbody-2a1',
+                'Tabel_2A2_Asal_Mahasiswa': 'tbody-2a2',
+                'Tabel_2A3_Kondisi_Mahasiswa': 'tbody-2a3',
+                'Tabel_2B1_Kurikulum': 'tbody-2b1',
+                'Tabel_2B2_Pemetaan_CPL': 'tbody-2b2',
+                'Tabel_2B3_Pemenuhan_CPL': 'tbody-2b3',
+                'Tabel_2B4_Masa_Tunggu': 'tbody-2b4',
+                'Tabel_2B5_Bidang_Kerja': 'tbody-2b5',
+                'Tabel_2B6_Kepuasan': 'tbody-2b6',
+                'Tabel_2C_Fleksibilitas': 'tbody-2c',
+                'Tabel_2D_Rekognisi': 'tbody-2d',
+                'Tabel_3A3_Pengembangan_DTPR': 'tbody-3a3',
+                'Tabel_6_Visi_Misi': 'tbody-6'
+            };
+
+            Object.keys(sheetMap).forEach(sheet => {
+                const tbody = document.getElementById(sheetMap[sheet]);
+                if(tbody && masterData[sheet]) {
+                    const data = masterData[sheet];
+                    const template = tbody.querySelector('tr');
+                    
+                    // Jangan tembak data jika tabel HTML sudah memiliki data
+                    if(!template || tbody.children.length > 2) return; 
+                    
+                    tbody.innerHTML = ''; 
+                    
+                    for(let i=1; i < data.length; i++) {
+                        const row = data[i];
+                        if(row.length === 0) continue; 
+                        
+                        const clone = template.cloneNode(true);
+                        const inputs = clone.querySelectorAll('input, select, textarea');
+                        
+                        inputs.forEach((input, idx) => {
+                            if(row[idx] !== undefined) {
+                                input.value = row[idx];
+                            } else if (input.type === 'number') {
+                                input.value = '0';
+                            }
+                        });
+                        tbody.appendChild(clone);
+                    }
+                }
+            });
+        }
+    });
+</script>
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
     <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
@@ -152,6 +246,47 @@
     <h4 class="text-white mt-3 fw-bold">Sedang Mengompilasi Dokumen...</h4>
     <p class="text-white-50">Mohon tunggu, proses konversi ke Word sedang berjalan.</p>
 </div>
+<script>
+    // ================= MESIN PENYIMPAN STATE SIDEBAR =================
+    document.addEventListener("DOMContentLoaded", function() {
+        // 1. Dapatkan URL/Path halaman yang sedang terbuka saat ini (misal: /kriteria-1/spmi/)
+        const currentPath = window.location.pathname;
 
+        // 2. Cari semua link yang ada di dalam sidebar
+        const sidebarLinks = document.querySelectorAll('.sidebar-link');
+
+        sidebarLinks.forEach(link => {
+            // Dapatkan attribute href dari link tersebut (abaikan jika itu tombol collapse yang pakai #)
+            const linkHref = link.getAttribute('href');
+            
+            // 3. Jika href-nya cocok dengan URL saat ini
+            if (linkHref && linkHref === currentPath) {
+                
+                // Beri penanda (highlight) bahwa link ini sedang aktif
+                link.classList.add('active');
+                
+
+                // 4. Cari tahu apakah link ini berada di dalam sebuah dropdown (collapse)
+                const parentCollapse = link.closest('.collapse');
+                
+                if (parentCollapse) {
+                    // Paksa dropdown (Kriteria) tersebut untuk TERBUKA
+                    parentCollapse.classList.add('show');
+                    
+                    // 5. Cari tombol "Kriteria X" yang mengontrol dropdown ini agar panahnya juga berubah mengarah ke bawah
+                    const parentHeaderId = parentCollapse.getAttribute('id');
+                    const parentHeaderButton = document.querySelector(`[href="#${parentHeaderId}"]`);
+                    
+                    if (parentHeaderButton) {
+                        parentHeaderButton.setAttribute('aria-expanded', 'true');
+                        // Opsional: Beri highlight ringan pada Kriteria yang sedang aktif
+                        
+                        
+                    }
+                }
+            }
+        });
+    });
+</script>
 </body>
 </html>

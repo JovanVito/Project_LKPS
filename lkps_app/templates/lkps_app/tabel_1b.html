@@ -1,0 +1,38 @@
+{% extends 'lkps_app/base.html' %}
+{% block content %}
+<div class="card card-modern border-top-blue shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="fw-bold text-dark m-0">Tabel 1.B: Unit SPMI dan SDM</h5>
+        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-1b')">
+            <i class="fas fa-plus me-1"></i> Tambah Unit
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center small">
+                    <tr>
+                        <th rowspan="2" class="align-middle">Nama Unit SPMI</th>
+                        <th rowspan="2" class="align-middle">Dokumen SPMI</th>
+                        <th colspan="2">Jml Auditor Mutu Internal</th>
+                        <th rowspan="2" class="align-middle">Frekuensi Audit per Tahun</th>
+                        <th colspan="2">Bukti Laporan Audit</th>
+                    </tr>
+                    <tr><th>Certified</th><th>Non-Certified</th><th>PT</th><th>UPPS</th></tr>
+                </thead>
+                <tbody id="tbody-1b">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Nama Unit"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="SK/Dokumen"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Link PT"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Link UPPS"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

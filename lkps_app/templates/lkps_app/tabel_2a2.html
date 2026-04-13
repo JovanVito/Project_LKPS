@@ -1,0 +1,30 @@
+{% extends 'lkps_app/base.html' %}
+{% block content %}
+<div class="card card-modern border-top-orange shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="fw-bold text-dark m-0">Tabel 2.A.2: Asal Mahasiswa</h5>
+        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2a2')">
+            <i class="fas fa-plus me-1"></i> Tambah Wilayah
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center small">
+                    <tr><th rowspan="2" class="align-middle">Asal Mahasiswa (Wilayah/Negara)</th><th colspan="3">Jumlah Mahasiswa Baru</th><th rowspan="2" class="align-middle">Link Bukti</th></tr>
+                    <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
+                </thead>
+                <tbody id="tbody-2a2">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Lokal / Nasional / Internasional"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="URL Bukti"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
