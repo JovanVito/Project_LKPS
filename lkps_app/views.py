@@ -1113,3 +1113,64 @@ def tabel_6_misi(request):
 
     data, created = Tabel_6_Misi.objects.get_or_create(id=1)
     return render(request, 'lkps_app/tabel_6_misi.html', {'data': data})
+
+# --- ADDED FROM FRONTEND MERGE ---
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+def fetch_data_lppm(request):
+    """
+    Endpoint untuk menerima sinkronisasi data dari sistem LPPM.
+    Data yang dikirim harus berupa JSON.
+    """
+    try:
+        # Mengambil data JSON yang dikirim oleh sistem LPPM
+        data_masuk = request.data
+        
+        # Contoh Logika: Jika LPPM mengirim data penelitian
+        # Kita bisa memprosesnya di sini sebelum disimpan ke database LKPS
+        # print(f"Data diterima dari LPPM: {data_masuk}")
+
+        # Memberikan feedback sukses ke sistem LPPM
+        return Response({
+            "status": "success",
+            "message": "Data LPPM berhasil diterima oleh sistem LKPS Universitas Pradita",
+            "received_count": len(data_masuk) if isinstance(data_masuk, list) else 1
+        }, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({
+            "status": "error",
+            "message": str(e)
+        }, status=status.HTTP_400_BAD_REQUEST)
+def logout_user(request):
+    logout(request)
+    return redirect('dashboard')
+def tabel_1b(request):
+    return render(request, 'lkps_app/tabel_1b.html')
+def tabel_2a1(request):
+    return render(request, 'lkps_app/tabel_2a1.html')
+def tabel_2a2(request):
+    return render(request, 'lkps_app/tabel_2a2.html')
+def tabel_2a3(request):
+    return render(request, 'lkps_app/tabel_2a3.html')
+def tabel_2b1(request):
+    return render(request, 'lkps_app/tabel_2b1.html')
+def tabel_2b2(request):
+    return render(request, 'lkps_app/tabel_2b2.html')
+def tabel_2b3(request):
+    return render(request, 'lkps_app/tabel_2b3.html')
+def tabel_2b4(request):
+    return render(request, 'lkps_app/tabel_2b4.html')
+def tabel_2b5(request):
+    return render(request, 'lkps_app/tabel_2b5.html')
+def tabel_2b6(request):
+    return render(request, 'lkps_app/tabel_2b6.html')
+def tabel_2c(request):
+    return render(request, 'lkps_app/tabel_2c.html')
+def tabel_2d(request):
+    return render(request, 'lkps_app/tabel_2d.html')
+def tabel_3a3(request):
+    return render(request, 'lkps_app/tabel_3a3.html')
+def tabel_6(request):
+    return render(request, 'lkps_app/tabel_6.html')

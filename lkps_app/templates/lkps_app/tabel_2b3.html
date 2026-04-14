@@ -1,0 +1,28 @@
+{% extends 'lkps_app/base.html' %}
+{% block content %}
+<div class="card card-modern border-top-teal shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="fw-bold text-dark m-0">Tabel 2.B.3: Pemenuhan CPL oleh Lulusan</h5>
+        <button class="btn btn-sm btn-primary" onclick="tambahBaris('tbody-2b3')"><i class="fas fa-plus me-1"></i> Tambah CPL</button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center small">
+                    <tr><th rowspan="2">Capaian Pembelajaran (CPL)</th><th rowspan="2">Target (%)</th><th colspan="3">Realisasi (%)</th></tr>
+                    <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
+                </thead>
+                <tbody id="tbody-2b3">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" placeholder="Deskripsi CPL"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" placeholder="80%"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'lkps_app/base.html' %}
+{% block content %}
+<div class="card card-modern border-top-teal shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="fw-bold text-dark m-0">Tabel 2.A.3: Kondisi Mahasiswa</h5>
+        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2a3')">
+            <i class="fas fa-plus me-1"></i> Tambah Tahun
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center small">
+                    <tr><th>Tahun Akademik</th><th>Jumlah Mahasiswa Baru</th><th>Jumlah Mahasiswa Aktif</th><th>Jumlah Mahasiswa Lulus</th><th>Jumlah Mahasiswa DO/Undur Diri</th></tr>
+                </thead>
+                <tbody id="tbody-2a3">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="TS/TS-1"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

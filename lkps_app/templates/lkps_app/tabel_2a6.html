@@ -1,0 +1,35 @@
+{% extends 'lkps_app/base.html' %}
+{% block content %}
+<div class="card card-modern border-top-orange shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <h5 class="fw-bold text-dark m-0">Tabel 2.B.6: Kepuasan Pengguna Lulusan</h5>
+        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2b6')">
+            <i class="fas fa-plus me-1"></i> Tambah Kriteria
+        </button>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle mb-0">
+                <thead class="table-light text-center small">
+                    <tr>
+                        <th rowspan="2" class="align-middle">Jenis Kemampuan</th>
+                        <th colspan="4">Tingkat Kepuasan Pengguna (%)</th>
+                        <th rowspan="2" class="align-middle">Rencana Tindak Lanjut</th>
+                    </tr>
+                    <tr><th>Sangat Baik</th><th>Baik</th><th>Cukup</th><th>Kurang</th></tr>
+                </thead>
+                <tbody id="tbody-2b6">
+                    <tr>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Etika / Keahlian / dll"></td>
+                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
+                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
+                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
+                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
+                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Tindak Lanjut"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
