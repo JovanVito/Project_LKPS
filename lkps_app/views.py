@@ -642,7 +642,8 @@ def tabel_1a4(request):
                             nama_dosen=nama[i],
                             sks_ps_sendiri=float(ps_s[i] or 0), sks_ps_lain=float(ps_l[i] or 0), sks_pt_lain=float(pt_l[i] or 0),
                             sks_penelitian=float(pen[i] or 0), sks_pkm=float(pkm[i] or 0),
-                            sks_tambahan=float(m_s[i] or 0) + float(m_l[i] or 0)
+                            sks_manajemen_pt_sendiri = float(m_s[i] or 0),
+                            sks_manajemen_pt_lain = float(m_l[i] or 0)
                         )
             return JsonResponse({'status': 'success'})
         except Exception as e: return JsonResponse({'status': 'error', 'message': str(e)})

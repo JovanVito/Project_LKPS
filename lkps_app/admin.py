@@ -69,7 +69,7 @@ class Tabel_1A3Admin(admin.ModelAdmin):
 
 @admin.register(Tabel_1A4)
 class Tabel_1A4Admin(admin.ModelAdmin):
-    list_display = ('nama_dosen', 'sks_ps_sendiri', 'sks_penelitian', 'sks_pkm', 'sks_tambahan')
+    list_display = ('nama_dosen', 'sks_ps_sendiri', 'sks_penelitian', 'sks_pkm', 'sks_manajemen_pt_sendiri', 'sks_manajemen_pt_lain')
     search_fields = ('nama_dosen',)
 
 @admin.register(Tabel_1A5)

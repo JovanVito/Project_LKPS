@@ -155,7 +155,8 @@ class Tabel_1A4(models.Model):
     sks_pt_lain = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     sks_penelitian = models.DecimalField(max_digits=5, decimal_places=2, default=0)
     sks_pkm = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    sks_tambahan = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    sks_manajemen_pt_sendiri = models.FloatField(default=0)
+    sks_manajemen_pt_lain = models.FloatField(default=0)
 
     def __str__(self):
         return self.nama_dosen
