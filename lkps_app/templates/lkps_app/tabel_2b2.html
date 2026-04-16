@@ -1,28 +1,63 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-blue shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.B.2: Pemetaan Profil Lulusan dengan CPL</h5>
-        <button class="btn btn-sm btn-primary" onclick="tambahBaris('tbody-2b2')"><i class="fas fa-plus me-1"></i> Tambah Profil</button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr><th>Profil Lulusan</th><th>CPL-1</th><th>CPL-2</th><th>CPL-3</th><th>CPL-4</th><th>CPL-5</th></tr>
-                </thead>
-                <tbody id="tbody-2b2">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" placeholder="Contoh: Web Developer"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2b2">
+    {% csrf_token %}
+    <div class="card card-modern border-top-blue shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.B.2: Pemetaan Profil Lulusan dengan CPL</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-primary" id="btn-tambah-2b2"><i class="fas fa-plus me-1"></i> Tambah Profil</button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr><th>Kode CPL</th><th>Sikap</th><th>Pengetahuan</th><th>KU</th><th>KK</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody id="tbody-2b2">
+                        {% for row in data_cpl %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" name="kode_cpl[]" value="{{ row.kode_cpl }}"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl1[]" value="{% if row.pl1 %}1{% else %}0{% endif %}"><input type="checkbox" class="form-check-input auto-save-input" {% if row.pl1 %}checked{% endif %} onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl2[]" value="{% if row.pl2 %}1{% else %}0{% endif %}"><input type="checkbox" class="form-check-input auto-save-input" {% if row.pl2 %}checked{% endif %} onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl3[]" value="{% if row.pl3 %}1{% else %}0{% endif %}"><input type="checkbox" class="form-check-input auto-save-input" {% if row.pl3 %}checked{% endif %} onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl4[]" value="{% if row.pl4 %}1{% else %}0{% endif %}"><input type="checkbox" class="form-check-input auto-save-input" {% if row.pl4 %}checked{% endif %} onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" name="kode_cpl[]" placeholder="CPL-1"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl1[]" value="0"><input type="checkbox" class="form-check-input auto-save-input" onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl2[]" value="0"><input type="checkbox" class="form-check-input auto-save-input" onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl3[]" value="0"><input type="checkbox" class="form-check-input auto-save-input" onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td class="text-center"><input type="hidden" name="map_pl4[]" value="0"><input type="checkbox" class="form-check-input auto-save-input" onchange="this.previousElementSibling.value=this.checked?'1':'0';"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('tbody-2b2');
+    const btnTambah = document.getElementById('btn-tambah-2b2');
+    const form = document.getElementById('form-tabel-2b2');
+    let debounceTimer;
+    function checkDeleteButtons(){const baris=tbody.querySelectorAll('tr');baris.forEach(tr=>{const btn=tr.querySelector('.btn-hapus-baris');if(baris.length>1) btn.removeAttribute('disabled');else btn.setAttribute('disabled','true');});}
+    form.addEventListener('input', function(e){if(e.target.classList.contains('auto-save-input')){clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>saveToDatabase(),1000);}});
+    form.addEventListener('change', function(e){if(e.target.classList.contains('auto-save-input')){clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>saveToDatabase(),500);}});
+    btnTambah.addEventListener('click', function(){const first=tbody.querySelector('tr');const clone=first.cloneNode(true);clone.querySelectorAll('input[type="text"]').forEach(el=>el.value='');clone.querySelectorAll('input[type="hidden"]').forEach(el=>el.value='0');clone.querySelectorAll('input[type="checkbox"]').forEach(el=>el.checked=false);tbody.appendChild(clone);checkDeleteButtons();saveToDatabase();});
+    tbody.addEventListener('click', function(e){const btn=e.target.closest('.btn-hapus-baris');if(btn&&!btn.hasAttribute('disabled')){btn.closest('tr').remove();checkDeleteButtons();saveToDatabase();}});
+    checkDeleteButtons();
+});
+function saveToDatabase(){const form=document.getElementById('form-tabel-2b2');const formData=new FormData(form);const csrfToken=document.querySelector('[name=csrfmiddlewaretoken]').value;fetch(window.location.href,{method:'POST',body:formData,headers:{'X-Requested-With':'XMLHttpRequest','X-CSRFToken':csrfToken}}).then(r=>r.json()).then(data=>{if(data.status==='success'&&typeof showToast==="function")showToast("Data tersimpan otomatis","success");}).catch(err=>console.error('Autosave Error:',err));}
+</script>
 {% endblock %}

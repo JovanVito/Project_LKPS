@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small fw-bold text-muted">Jenis Program</label>
-                            <input type="text" class="form-control form-control-sm auto-save-input"
+                            <input type="text" class="form-control form-control-sm auto-save-input" 
                                 name="pengusul_jenis_program" value="{{ data.jenis_program|default_if_none:'' }}">
                         </div>
                         <div class="col-md-8">
@@ -85,17 +85,17 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label small fw-bold text-muted">Alamat</label>
-                            <textarea class="form-control form-control-sm auto-save-input" name="pengusul_alamat"
+                            <textarea class="form-control form-control-sm auto-save-input" name="pengusul_alamat" placeholder="Jl. Palem Raja"
                                 rows="2">{{ data.alamat|default_if_none:'' }}</textarea>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label small fw-bold text-muted">Nomor Telepon</label>
-                            <input type="text" class="form-control form-control-sm auto-save-input"
+                            <label class="form-label small fw-bold text-muted">Nomor Telepon</label> 
+                            <input type="text" class="form-control form-control-sm auto-save-input" placeholder="021xxxx"
                                 name="pengusul_telepon" value="{{ data.telepon|default_if_none:'' }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-bold text-muted">E-Mail dan Website</label>
-                            <input type="text" class="form-control form-control-sm auto-save-input"
+                            <input type="text" class="form-control form-control-sm auto-save-input" placeholder="your@email.com"
                                 name="pengusul_email_web" value="{{ data.email_web|default_if_none:'' }}">
                         </div>
 

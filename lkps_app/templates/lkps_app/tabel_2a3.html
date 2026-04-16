@@ -1,29 +1,60 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-teal shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.A.3: Kondisi Mahasiswa</h5>
-        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2a3')">
-            <i class="fas fa-plus me-1"></i> Tambah Tahun
-        </button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr><th>Tahun Akademik</th><th>Jumlah Mahasiswa Baru</th><th>Jumlah Mahasiswa Aktif</th><th>Jumlah Mahasiswa Lulus</th><th>Jumlah Mahasiswa DO/Undur Diri</th></tr>
-                </thead>
-                <tbody id="tbody-2a3">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="TS/TS-1"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2a3">
+    {% csrf_token %}
+    <div class="card card-modern border-top-teal shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.A.3: Kondisi Mahasiswa</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr><th class="align-middle">Status / Kondisi</th><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
+                    </thead>
+                    <tbody id="tbody-2a3">
+                        {% for row in data_2a3 %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="kondisi_kategori[]" value="{{ row.status }}" readonly></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="kondisi_ts2[]" value="{{ row.ts_2 }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="kondisi_ts1[]" value="{{ row.ts_1 }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="kondisi_ts[]" value="{{ row.ts }}"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form-tabel-2a3');
+    let debounceTimer;
+    form.addEventListener('input', function(e){
+        if(e.target.classList.contains('auto-save-input')){
+            clearTimeout(debounceTimer);
+            debounceTimer=setTimeout(()=>saveToDatabase(),1000);
+        }
+    });
+});
+function saveToDatabase(){
+    const form = document.getElementById('form-tabel-2a3');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(window.location.href, {
+        method:'POST', body:formData,
+        headers:{'X-Requested-With':'XMLHttpRequest','X-CSRFToken':csrfToken}
+    })
+    .then(r=>r.json())
+    .then(data=>{if(data.status==='success'&&typeof showToast==="function")showToast("Data tersimpan otomatis","success");})
+    .catch(err=>console.error('Autosave Error:',err));
+}
+</script>
 {% endblock %}

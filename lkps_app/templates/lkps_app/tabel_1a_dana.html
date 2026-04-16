@@ -35,19 +35,19 @@
                             <tbody id="tbody-sumber">
                                 {% for row in data_sumber %}
                                 <tr>
-                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="sumber_dana[]" value="{{ row.sumber_dana }}"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts2[]" value="{{ row.ts_2 }}"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts1[]" value="{{ row.ts_1 }}"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts[]" value="{{ row.ts }}"></td>
+                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="sumber_dana[]" value="{{ row.sumber_dana }}" placeholder="Contoh: Mahasiswa (SPP)"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts2[]" value="{{ row.ts_2 }}" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts1[]" value="{{ row.ts_1 }}" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts[]" value="{{ row.ts }}" placeholder="0,00"></td>
                                     <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_sumber[]" value="{{ row.link_bukti }}" placeholder="https://..."></td>
                                     <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-sumber"><i class="fas fa-trash"></i></button></td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="sumber_dana[]" value="Mahasiswa (SPP)"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts2[]" value="0"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts1[]" value="0"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts[]" value="0"></td>
+                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="sumber_dana[]" placeholder="Contoh: Mahasiswa (SPP)"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts2[]" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts1[]" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="sumber_ts[]" placeholder="0,00"></td>
                                     <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_sumber[]" placeholder="https://..."></td>
                                     <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-sumber" disabled><i class="fas fa-trash"></i></button></td>
                                 </tr>
@@ -86,19 +86,19 @@
                             <tbody id="tbody-penggunaan">
                                 {% for row in data_penggunaan %}
                                 <tr>
-                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="guna_dana[]" value="{{ row.penggunaan }}"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts2[]" value="{{ row.ts_2 }}"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts1[]" value="{{ row.ts_1 }}"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts[]" value="{{ row.ts }}"></td>
+                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="guna_dana[]" value="{{ row.penggunaan }}" placeholder="Contoh: Penelitian"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts2[]" value="{{ row.ts_2 }}" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts1[]" value="{{ row.ts_1 }}" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts[]" value="{{ row.ts }}" placeholder="0,00"></td>
                                     <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_guna[]" value="{{ row.link_bukti }}" placeholder="https://..."></td>
                                     <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-guna"><i class="fas fa-trash"></i></button></td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="guna_dana[]" value="Pendidikan"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts2[]" value="0"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts1[]" value="0"></td>
-                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts[]" value="0"></td>
+                                    <td><input type="text" class="form-control form-control-sm text-start auto-save-input" name="guna_dana[]" placeholder="Contoh: Penelitian"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts2[]" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts1[]" placeholder="0,00"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center auto-save-input" name="guna_ts[]" placeholder="0,00"></td>
                                     <td><input type="url" class="form-control form-control-sm auto-save-input" name="link_guna[]" placeholder="https://..."></td>
                                     <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-guna" disabled><i class="fas fa-trash"></i></button></td>
                                 </tr>

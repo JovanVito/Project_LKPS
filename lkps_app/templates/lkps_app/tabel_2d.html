@@ -1,40 +1,137 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-purple shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.D: Rekognisi dan Apresiasi Kompetensi</h5>
-        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2d')">
-            <i class="fas fa-plus me-1"></i> Tambah Rekognisi
-        </button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr>
-                        <th rowspan="2" class="align-middle">Sumber Rekognisi</th>
-                        <th rowspan="2" class="align-middle">Jenis Pengakuan (Rekognisi)</th>
-                        <th colspan="3">Tahun Akademik</th>
-                        <th rowspan="2" class="align-middle">Link Bukti</th>
-                    </tr>
-                    <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
-                </thead>
-                <tbody id="tbody-2d">
-                    <tr>
-                        <td>
-                            <select class="form-select form-select-sm border-0 bg-transparent auto-save-input">
-                                <option value="Masyarakat">Masyarakat</option><option value="Dunia Usaha">Dunia Usaha</option><option value="Dunia Industri">Dunia Industri</option><option value="Dunia Kerja">Dunia Kerja</option>
-                            </select>
-                        </td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Contoh: Sertifikasi"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="URL Bukti"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2d">
+    {% csrf_token %}
+    <div class="card card-modern border-top-purple shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.D: Rekognisi dan Apresiasi Kompetensi</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+            <button type="button" class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" id="btn-tambah-2d">
+                <i class="fas fa-plus me-1"></i> Tambah Rekognisi
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr>
+                            <th rowspan="2" class="align-middle">Sumber Rekognisi</th>
+                            <th rowspan="2" class="align-middle">Jenis Pengakuan (Rekognisi)</th>
+                            <th colspan="3">Tahun Akademik</th>
+                            <th rowspan="2" class="align-middle">Link Bukti</th>
+                            <th rowspan="2" class="align-middle">Aksi</th>
+                        </tr>
+                        <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
+                    </thead>
+                    <tbody id="tbody-2d">
+                        {% for row in data_2d %}
+                        <tr>
+                            <td>
+                                <select name="sumber[]" class="form-select form-select-sm border-0 bg-transparent auto-save-input">
+                                    <option value="Masyarakat" {% if row.sumber == 'Masyarakat' %}selected{% endif %}>Masyarakat</option>
+                                    <option value="Dunia Usaha" {% if row.sumber == 'Dunia Usaha' %}selected{% endif %}>Dunia Usaha</option>
+                                    <option value="Dunia Industri" {% if row.sumber == 'Dunia Industri' %}selected{% endif %}>Dunia Industri</option>
+                                    <option value="Dunia Kerja" {% if row.sumber == 'Dunia Kerja' %}selected{% endif %}>Dunia Kerja</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="jenis_pengakuan[]" value="{{ row.jenis_pengakuan }}"></td>
+                            <td><input type="number" name="ts_2[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.ts_2 }}"></td>
+                            <td><input type="number" name="ts_1[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.ts_1 }}"></td>
+                            <td><input type="number" name="ts[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.ts }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_bukti[]" value="{{ row.link_bukti|default_if_none:'' }}"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td>
+                                <select name="sumber[]" class="form-select form-select-sm border-0 bg-transparent auto-save-input">
+                                    <option value="Masyarakat">Masyarakat</option>
+                                    <option value="Dunia Usaha">Dunia Usaha</option>
+                                    <option value="Dunia Industri">Dunia Industri</option>
+                                    <option value="Dunia Kerja">Dunia Kerja</option>
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="jenis_pengakuan[]" placeholder="Contoh: Sertifikasi"></td>
+                            <td><input type="number" name="ts_2[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="number" name="ts_1[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="number" name="ts[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_bukti[]" placeholder="URL Bukti"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('tbody-2d');
+    const btnTambah = document.getElementById('btn-tambah-2d');
+    const form = document.getElementById('form-tabel-2d');
+    let debounceTimer;
+
+    function checkDeleteButtons() {
+        const baris = tbody.querySelectorAll('tr');
+        baris.forEach(tr => {
+            const btn = tr.querySelector('.btn-hapus-baris');
+            if (baris.length > 1) btn.removeAttribute('disabled');
+            else btn.setAttribute('disabled', 'true');
+        });
+    }
+
+    form.addEventListener('input', function(e) {
+        if (e.target.classList.contains('auto-save-input')) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => saveToDatabase(), 1000);
+        }
+    });
+    form.addEventListener('change', function(e) {
+        if (e.target.classList.contains('auto-save-input')) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => saveToDatabase(), 500);
+        }
+    });
+
+    btnTambah.addEventListener('click', function() {
+        const barisPertama = tbody.querySelector('tr');
+        const barisBaru = barisPertama.cloneNode(true);
+        barisBaru.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        barisBaru.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+        tbody.appendChild(barisBaru);
+        checkDeleteButtons();
+        saveToDatabase();
+    });
+
+    tbody.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-hapus-baris');
+        if (btn && !btn.hasAttribute('disabled')) {
+            btn.closest('tr').remove();
+            checkDeleteButtons();
+            saveToDatabase();
+        }
+    });
+
+    checkDeleteButtons();
+});
+
+function saveToDatabase() {
+    const form = document.getElementById('form-tabel-2d');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(window.location.href, {
+        method: 'POST', body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrfToken }
+    })
+    .then(r => r.json())
+    .then(data => { if (data.status === 'success' && typeof showToast === "function") showToast("Data tersimpan otomatis", "success"); })
+    .catch(err => console.error('Autosave Error:', err));
+}
+</script>
 {% endblock %}

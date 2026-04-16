@@ -1,46 +1,85 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-blue shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.A.1: Mahasiswa Reguler dan Lainnya</h5>
-        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2a1')">
-            <i class="fas fa-plus me-1"></i> Tambah Tahun
-        </button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0" style="min-width: 1200px;">
-                <thead class="table-light text-center small">
-                    <tr>
-                        <th rowspan="2" class="align-middle">Tahun Akademik</th><th rowspan="2" class="align-middle">Daya Tampung</th>
-                        <th colspan="4">Jumlah Calon Pendaftar</th><th colspan="4">Jumlah Mahasiswa Baru</th><th colspan="4">Jumlah Mahasiswa Aktif</th>
-                    </tr>
-                    <tr>
-                        <th>Reguler</th><th>RPL</th><th>Afirmasi</th><th>Khusus</th>
-                        <th>Reguler</th><th>RPL</th><th>Afirmasi</th><th>Khusus</th>
-                        <th>Reguler</th><th>RPL</th><th>Afirmasi</th><th>Khusus</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-2a1">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="TS/TS-1"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2a1">
+    {% csrf_token %}
+    <div class="card card-modern border-top-blue shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.A.1: Mahasiswa Reguler dan Lainnya</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0" style="min-width: 1200px;">
+                    <thead class="table-light text-center small">
+                        <tr>
+                            <th rowspan="2" class="align-middle">Tahun Akademik</th><th rowspan="2" class="align-middle">Daya Tampung</th>
+                            <th colspan="3">Jumlah Calon Pendaftar</th>
+                            <th colspan="4">Jumlah Lulus Seleksi</th>
+                            <th colspan="4">Jumlah Mahasiswa Baru</th>
+                            <th colspan="4">Jumlah Mahasiswa Aktif</th>
+                        </tr>
+                        <tr>
+                            <th>Reguler</th><th>Afirmasi</th><th>Khusus</th>
+                            <th>Reguler</th><th>Afirmasi</th><th>Khusus</th><th>RPL</th>
+                            <th>Reguler</th><th>Afirmasi</th><th>Khusus</th><th>RPL</th>
+                            <th>Reguler</th><th>Afirmasi</th><th>Khusus</th><th>RPL</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-2a1">
+                        {% for row in data_2a1 %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="tahun_akademik[]" value="{{ row.tahun_akademik }}" readonly></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="daya_tampung[]" value="{{ row.daya_tampung }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="pendaftar_reg[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="pendaftar_afi[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="pendaftar_khu[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="lulus_reg[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="lulus_afi[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="lulus_khu[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="lulus_rpl[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="maba_reg[]" value="{{ row.mhs_baru_reguler }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="maba_afi[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="maba_khu[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="maba_rpl[]" value="{{ row.mhs_baru_transfer }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="aktif_reg[]" value="{{ row.total_mhs_reguler }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="aktif_afi[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="aktif_khu[]" value="0"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="aktif_rpl[]" value="{{ row.total_mhs_transfer }}"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form-tabel-2a1');
+    let debounceTimer;
+    form.addEventListener('input', function(e){
+        if(e.target.classList.contains('auto-save-input')){
+            clearTimeout(debounceTimer);
+            debounceTimer=setTimeout(()=>saveToDatabase(),1000);
+        }
+    });
+});
+function saveToDatabase(){
+    const form = document.getElementById('form-tabel-2a1');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(window.location.href, {
+        method:'POST', body:formData,
+        headers:{'X-Requested-With':'XMLHttpRequest','X-CSRFToken':csrfToken}
+    })
+    .then(r=>r.json())
+    .then(data=>{if(data.status==='success'&&typeof showToast==="function")showToast("Data tersimpan otomatis","success");})
+    .catch(err=>console.error('Autosave Error:',err));
+}
+</script>
 {% endblock %}

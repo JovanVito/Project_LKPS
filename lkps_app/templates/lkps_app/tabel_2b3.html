@@ -1,28 +1,63 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-teal shadow-sm">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.B.3: Pemenuhan CPL oleh Lulusan</h5>
-        <button class="btn btn-sm btn-primary" onclick="tambahBaris('tbody-2b3')"><i class="fas fa-plus me-1"></i> Tambah CPL</button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr><th rowspan="2">Capaian Pembelajaran (CPL)</th><th rowspan="2">Target (%)</th><th colspan="3">Realisasi (%)</th></tr>
-                    <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
-                </thead>
-                <tbody id="tbody-2b3">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" placeholder="Deskripsi CPL"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" placeholder="80%"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2b3">
+    {% csrf_token %}
+    <div class="card card-modern border-top-teal shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.B.3: Pemenuhan CPL oleh Lulusan</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-primary" id="btn-tambah-2b3"><i class="fas fa-plus me-1"></i> Tambah CPL</button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr><th rowspan="2">CPL</th><th rowspan="2">CPMK</th><th colspan="3">Semester</th><th rowspan="2">Aksi</th></tr>
+                        <tr><th>Smt 1</th><th>Smt 2</th><th>Smt 3</th></tr>
+                    </thead>
+                    <tbody id="tbody-2b3">
+                        {% for row in data_pemenuhan %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" name="pem_cpl[]" value="{{ row.cpl }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" name="pem_cpmk[]" value="{{ row.cpmk }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" name="pem_smt1[]" value="{{ row.smt1 }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" name="pem_smt2[]" value="{{ row.smt2 }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" name="pem_smt3[]" value="{{ row.smt3 }}"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" name="pem_cpl[]" placeholder="CPL"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input" name="pem_cpmk[]" placeholder="CPMK"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" name="pem_smt1[]"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" name="pem_smt2[]"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 auto-save-input text-center" name="pem_smt3[]"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('tbody-2b3');
+    const btnTambah = document.getElementById('btn-tambah-2b3');
+    const form = document.getElementById('form-tabel-2b3');
+    let debounceTimer;
+    function checkDeleteButtons(){const baris=tbody.querySelectorAll('tr');baris.forEach(tr=>{const btn=tr.querySelector('.btn-hapus-baris');if(baris.length>1) btn.removeAttribute('disabled');else btn.setAttribute('disabled','true');});}
+    form.addEventListener('input', function(e){if(e.target.classList.contains('auto-save-input')){clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>saveToDatabase(),1000);}});
+    btnTambah.addEventListener('click', function(){const first=tbody.querySelector('tr');const clone=first.cloneNode(true);clone.querySelectorAll('input, textarea').forEach(el=>el.value='');tbody.appendChild(clone);checkDeleteButtons();saveToDatabase();});
+    tbody.addEventListener('click', function(e){const btn=e.target.closest('.btn-hapus-baris');if(btn&&!btn.hasAttribute('disabled')){btn.closest('tr').remove();checkDeleteButtons();saveToDatabase();}});
+    checkDeleteButtons();
+});
+function saveToDatabase(){const form=document.getElementById('form-tabel-2b3');const formData=new FormData(form);const csrfToken=document.querySelector('[name=csrfmiddlewaretoken]').value;fetch(window.location.href,{method:'POST',body:formData,headers:{'X-Requested-With':'XMLHttpRequest','X-CSRFToken':csrfToken}}).then(r=>r.json()).then(data=>{if(data.status==='success'&&typeof showToast==="function")showToast("Data tersimpan otomatis","success");}).catch(err=>console.error('Autosave Error:',err));}
+</script>
 {% endblock %}

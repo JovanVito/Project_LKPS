@@ -1,40 +1,74 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-orange shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.B.6: Kepuasan Pengguna Lulusan</h5>
-        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2b6')">
-            <i class="fas fa-plus me-1"></i> Tambah Kriteria
-        </button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr>
-                        <th rowspan="2" class="align-middle">Jenis Kemampuan</th>
-                        <th colspan="4">Tingkat Kepuasan Pengguna (%)</th>
-                        <th rowspan="2" class="align-middle">Rencana Tindak Lanjut</th>
-                    </tr>
-                    <tr>
-                        <th>Sangat Baik</th>
-                        <th>Baik</th>
-                        <th>Cukup</th>
-                        <th>Kurang</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-2b6">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Etika / Keahlian / dll"></td>
-                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
-                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
-                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
-                        <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0%"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Tindak Lanjut"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2b6">
+    {% csrf_token %}
+    <div class="card card-modern border-top-orange shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold text-dark m-0">Tabel 2.B.6: Kepuasan Pengguna Lulusan</h5>
+            <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr>
+                            <th rowspan="2" class="align-middle">Jenis Kemampuan</th>
+                            <th colspan="4">Tingkat Kepuasan Pengguna (%)</th>
+                            <th rowspan="2" class="align-middle">Rencana Tindak Lanjut</th>
+                        </tr>
+                        <tr><th>Sangat Baik</th><th>Baik</th><th>Cukup</th><th>Kurang</th></tr>
+                    </thead>
+                    <tbody id="tbody-2b6">
+                        {% for row in data_2b6 %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="jenis_kemampuan[]" value="{{ row.jenis_kemampuan }}" readonly></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="sangat_baik[]" value="{{ row.sangat_baik }}"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="baik[]" value="{{ row.baik }}"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="cukup[]" value="{{ row.cukup }}"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="kurang[]" value="{{ row.kurang }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="tindak_lanjut[]" value="{{ row.tindak_lanjut|default_if_none:'' }}"></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="jenis_kemampuan[]" placeholder="Etika / Keahlian / dll"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="sangat_baik[]" placeholder="0%"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="baik[]" placeholder="0%"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="cukup[]" placeholder="0%"></td>
+                            <td><input type="number" step="0.1" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="kurang[]" placeholder="0%"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="tindak_lanjut[]" placeholder="Tindak Lanjut"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white p-3">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Total Alumni 3 Tahun Terakhir</label>
+                    <input type="number" class="form-control form-control-sm auto-save-input" name="total_alumni_3thn" value="{{ summary.total_alumni_3thn|default:0 }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Total Responden</label>
+                    <input type="number" class="form-control form-control-sm auto-save-input" name="total_responden" value="{{ summary.total_responden|default:0 }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold">Total Mhs Aktif TS</label>
+                    <input type="number" class="form-control form-control-sm auto-save-input" name="total_mhs_aktif_ts" value="{{ summary.total_mhs_aktif_ts|default:0 }}">
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form-tabel-2b6');
+    let debounceTimer;
+    form.addEventListener('input', function(e){if(e.target.classList.contains('auto-save-input')){clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>saveToDatabase(),1000);}});
+});
+function saveToDatabase(){const form=document.getElementById('form-tabel-2b6');const formData=new FormData(form);const csrfToken=document.querySelector('[name=csrfmiddlewaretoken]').value;fetch(window.location.href,{method:'POST',body:formData,headers:{'X-Requested-With':'XMLHttpRequest','X-CSRFToken':csrfToken}}).then(r=>r.json()).then(data=>{if(data.status==='success'&&typeof showToast==="function")showToast("Data tersimpan otomatis","success");}).catch(err=>console.error('Autosave Error:',err));}
+</script>
 {% endblock %}

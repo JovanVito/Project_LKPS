@@ -1,28 +1,108 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-orange shadow-sm mb-4">
-    <div class="card-header bg-white py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.C: Fleksibilitas Dalam Proses Pembelajaran</h5>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr><th rowspan="2" class="align-middle">Bentuk Pembelajaran</th><th colspan="3">Jml Mahasiswa per Tahun</th><th rowspan="2" class="align-middle">Link Bukti</th></tr>
-                    <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
-                </thead>
-                <tbody id="tbody-2c">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" value="Micro-credential"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="URL Bukti"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <button class="btn btn-sm btn-outline-secondary m-3" onclick="tambahBaris('tbody-2c')"><i class="fas fa-plus"></i> Tambah Bentuk Pembelajaran Lainnya</button>
+<form id="form-tabel-2c">
+    {% csrf_token %}
+    <div class="card card-modern border-top-orange shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.C: Fleksibilitas Dalam Proses Pembelajaran</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+            <button type="button" class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" id="btn-tambah-2c">
+                <i class="fas fa-plus me-1"></i> Tambah Bentuk Pembelajaran
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr><th rowspan="2" class="align-middle">Bentuk Pembelajaran</th><th colspan="3">Jml Mahasiswa per Tahun</th><th rowspan="2" class="align-middle">Link Bukti</th><th rowspan="2" class="align-middle">Aksi</th></tr>
+                        <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
+                    </thead>
+                    <tbody id="tbody-2c">
+                        {% for row in data_2c %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="bentuk_pembelajaran[]" value="{{ row.bentuk_pembelajaran }}"></td>
+                            <td><input type="number" name="ts_2[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.ts_2 }}"></td>
+                            <td><input type="number" name="ts_1[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.ts_1 }}"></td>
+                            <td><input type="number" name="ts[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.ts }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_bukti[]" value="{{ row.link_bukti|default_if_none:'' }}"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="bentuk_pembelajaran[]" placeholder="Micro-credential"></td>
+                            <td><input type="number" name="ts_2[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="number" name="ts_1[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="number" name="ts[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_bukti[]" placeholder="URL Bukti"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('tbody-2c');
+    const btnTambah = document.getElementById('btn-tambah-2c');
+    const form = document.getElementById('form-tabel-2c');
+    let debounceTimer;
+
+    function checkDeleteButtons() {
+        const baris = tbody.querySelectorAll('tr');
+        baris.forEach(tr => {
+            const btn = tr.querySelector('.btn-hapus-baris');
+            if (baris.length > 1) btn.removeAttribute('disabled');
+            else btn.setAttribute('disabled', 'true');
+        });
+    }
+
+    form.addEventListener('input', function(e) {
+        if (e.target.classList.contains('auto-save-input')) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => saveToDatabase(), 1000);
+        }
+    });
+
+    btnTambah.addEventListener('click', function() {
+        const barisPertama = tbody.querySelector('tr');
+        const barisBaru = barisPertama.cloneNode(true);
+        barisBaru.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        tbody.appendChild(barisBaru);
+        checkDeleteButtons();
+        saveToDatabase();
+    });
+
+    tbody.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-hapus-baris');
+        if (btn && !btn.hasAttribute('disabled')) {
+            btn.closest('tr').remove();
+            checkDeleteButtons();
+            saveToDatabase();
+        }
+    });
+
+    checkDeleteButtons();
+});
+
+function saveToDatabase() {
+    const form = document.getElementById('form-tabel-2c');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(window.location.href, {
+        method: 'POST', body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrfToken }
+    })
+    .then(r => r.json())
+    .then(data => { if (data.status === 'success' && typeof showToast === "function") showToast("Data tersimpan otomatis", "success"); })
+    .catch(err => console.error('Autosave Error:', err));
+}
+</script>
 {% endblock %}

@@ -1,30 +1,62 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-orange shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 2.A.2: Asal Mahasiswa</h5>
-        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-2a2')">
-            <i class="fas fa-plus me-1"></i> Tambah Wilayah
-        </button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr><th rowspan="2" class="align-middle">Asal Mahasiswa (Wilayah/Negara)</th><th colspan="3">Jumlah Mahasiswa Baru</th><th rowspan="2" class="align-middle">Link Bukti</th></tr>
-                    <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
-                </thead>
-                <tbody id="tbody-2a2">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Lokal / Nasional / Internasional"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="URL Bukti"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-2a2">
+    {% csrf_token %}
+    <div class="card card-modern border-top-orange shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 2.A.2: Asal Mahasiswa</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr><th rowspan="2" class="align-middle">Asal Mahasiswa (Wilayah/Negara)</th><th colspan="3">Jumlah Mahasiswa Baru</th><th rowspan="2" class="align-middle">Link Bukti</th></tr>
+                        <tr><th>TS-2</th><th>TS-1</th><th>TS</th></tr>
+                    </thead>
+                    <tbody id="tbody-2a2">
+                        {% for row in data_2a2 %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="asal_kategori[]" value="{{ row.asal_mahasiswa }}" readonly></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="asal_ts2[]" value="{{ row.ts_2 }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="asal_ts1[]" value="{{ row.ts_1 }}"></td>
+                            <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" name="asal_ts[]" value="{{ row.ts }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_asal[]" value="{{ row.link_bukti|default_if_none:'' }}"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('form-tabel-2a2');
+    let debounceTimer;
+    form.addEventListener('input', function(e){
+        if(e.target.classList.contains('auto-save-input')){
+            clearTimeout(debounceTimer);
+            debounceTimer=setTimeout(()=>saveToDatabase(),1000);
+        }
+    });
+});
+function saveToDatabase(){
+    const form = document.getElementById('form-tabel-2a2');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(window.location.href, {
+        method:'POST', body:formData,
+        headers:{'X-Requested-With':'XMLHttpRequest','X-CSRFToken':csrfToken}
+    })
+    .then(r=>r.json())
+    .then(data=>{if(data.status==='success'&&typeof showToast==="function")showToast("Data tersimpan otomatis","success");})
+    .catch(err=>console.error('Autosave Error:',err));
+}
+</script>
 {% endblock %}

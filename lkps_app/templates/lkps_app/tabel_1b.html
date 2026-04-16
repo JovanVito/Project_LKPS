@@ -1,38 +1,119 @@
 {% extends 'lkps_app/base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="card card-modern border-top-blue shadow-sm mb-4">
-    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-        <h5 class="fw-bold text-dark m-0">Tabel 1.B: Unit SPMI dan SDM</h5>
-        <button class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" onclick="tambahBaris('tbody-1b')">
-            <i class="fas fa-plus me-1"></i> Tambah Unit
-        </button>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle mb-0">
-                <thead class="table-light text-center small">
-                    <tr>
-                        <th rowspan="2" class="align-middle">Nama Unit SPMI</th>
-                        <th rowspan="2" class="align-middle">Dokumen SPMI</th>
-                        <th colspan="2">Jml Auditor Mutu Internal</th>
-                        <th rowspan="2" class="align-middle">Frekuensi Audit per Tahun</th>
-                        <th colspan="2">Bukti Laporan Audit</th>
-                    </tr>
-                    <tr><th>Certified</th><th>Non-Certified</th><th>PT</th><th>UPPS</th></tr>
-                </thead>
-                <tbody id="tbody-1b">
-                    <tr>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Nama Unit"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="SK/Dokumen"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="number" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Link PT"></td>
-                        <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" placeholder="Link UPPS"></td>
-                    </tr>
-                </tbody>
-            </table>
+<form id="form-tabel-1b">
+    {% csrf_token %}
+    <div class="card card-modern border-top-blue shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="fw-bold text-dark m-0">Tabel 1.B: Unit SPMI dan SDM</h5>
+                <span class="badge bg-light text-success border"><i class="fas fa-magic me-1"></i> Autosave Aktif</span>
+            </div>
+            <button type="button" class="btn btn-sm text-white" style="background-color: var(--pradita-navy);" id="btn-tambah-1b">
+                <i class="fas fa-plus me-1"></i> Tambah Unit
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0">
+                    <thead class="table-light text-center small">
+                        <tr>
+                            <th rowspan="2" class="align-middle">Nama Unit SPMI</th>
+                            <th rowspan="2" class="align-middle">Dokumen SPMI</th>
+                            <th colspan="2">Jml Auditor Mutu Internal</th>
+                            <th rowspan="2" class="align-middle">Frekuensi Audit per Tahun</th>
+                            <th colspan="2">Bukti Laporan Audit</th>
+                            <th rowspan="2" class="align-middle">Aksi</th>
+                        </tr>
+                        <tr><th>Certified</th><th>Non-Certified</th><th>PT</th><th>UPPS</th></tr>
+                    </thead>
+                    <tbody id="tbody-1b">
+                        {% for row in data_1b %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="nama_unit[]" value="{{ row.nama_unit }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="dokumen[]" value="{{ row.dokumen }}"></td>
+                            <td><input type="number" name="jml_auditor_cert[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.jml_auditor_cert }}"></td>
+                            <td><input type="number" name="jml_auditor_non[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.jml_auditor_non }}"></td>
+                            <td><input type="number" name="frekuensi_audit[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" value="{{ row.frekuensi_audit }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_pt[]" value="{{ row.link_pt|default_if_none:'' }}"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_upps[]" value="{{ row.link_upps|default_if_none:'' }}"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="nama_unit[]" placeholder="Nama Unit"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="dokumen[]" placeholder="SK/Dokumen"></td>
+                            <td><input type="number" name="jml_auditor_cert[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="number" name="jml_auditor_non[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="number" name="frekuensi_audit[]" class="form-control form-control-sm border-0 bg-transparent auto-save-input text-center" placeholder="0"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_pt[]" placeholder="Link PT"></td>
+                            <td><input type="text" class="form-control form-control-sm border-0 bg-transparent auto-save-input" name="link_upps[]" placeholder="Link UPPS"></td>
+                            <td><button type="button" class="btn btn-sm btn-outline-danger btn-hapus-baris" disabled><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('tbody-1b');
+    const btnTambah = document.getElementById('btn-tambah-1b');
+    const form = document.getElementById('form-tabel-1b');
+    let debounceTimer;
+
+    function checkDeleteButtons() {
+        const baris = tbody.querySelectorAll('tr');
+        baris.forEach(tr => {
+            const btn = tr.querySelector('.btn-hapus-baris');
+            if (baris.length > 1) btn.removeAttribute('disabled');
+            else btn.setAttribute('disabled', 'true');
+        });
+    }
+
+    form.addEventListener('input', function(e) {
+        if (e.target.classList.contains('auto-save-input')) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => saveToDatabase(), 1000);
+        }
+    });
+
+    btnTambah.addEventListener('click', function() {
+        const barisPertama = tbody.querySelector('tr');
+        const barisBaru = barisPertama.cloneNode(true);
+        barisBaru.querySelectorAll('input, textarea').forEach(el => el.value = '');
+        tbody.appendChild(barisBaru);
+        checkDeleteButtons();
+        saveToDatabase();
+    });
+
+    tbody.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn-hapus-baris');
+        if (btn && !btn.hasAttribute('disabled')) {
+            btn.closest('tr').remove();
+            checkDeleteButtons();
+            saveToDatabase();
+        }
+    });
+
+    checkDeleteButtons();
+});
+
+function saveToDatabase() {
+    const form = document.getElementById('form-tabel-1b');
+    const formData = new FormData(form);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    fetch(window.location.href, {
+        method: 'POST', body: formData,
+        headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrfToken }
+    })
+    .then(r => r.json())
+    .then(data => { if (data.status === 'success' && typeof showToast === "function") showToast("Data tersimpan otomatis", "success"); })
+    .catch(err => console.error('Autosave Error:', err));
+}
+</script>
 {% endblock %}
