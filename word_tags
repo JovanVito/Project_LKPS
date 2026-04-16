@@ -1,0 +1,699 @@
+======================================================================
+         JINJA TAGS (DOCXTPL) UNTUK MASTER_FORMAT_LKPS.DOCX         
+ PENTING: Gunakan awalan {% tr for ... %} dan akhiran {% endtr %}   
+          agar baris tabel Word berhasil ter-looping secara baris.  
+======================================================================
+
+=========================================
+MODEL: ProgramStudi (Alias Context: t_ProgramStudi)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_ProgramStudi %}
+{{ r.nama_prodi }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jenjang_studi }}
+{{ r.akreditasi }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.no_sk }}
+{% endtr %}
+
+
+=========================================
+MODEL: ProfilPengguna (Alias Context: t_ProfilPengguna)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_ProfilPengguna %}
+{{ r.user }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.nomor_induk }}
+{{ r.role }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.akses_prodi }}
+{% endtr %}
+
+
+=========================================
+MODEL: IdentitasPengusul (Alias Context: t_IdentitasPengusul)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_IdentitasPengusul %}
+{{ r.program_studi }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.logo_pt }}
+{{ r.nama_ps_sampul }}
+{{ r.nama_pt_sampul }}
+{{ r.kota_sampul }}
+{{ r.tahun_sampul }}
+{{ r.unit_pengelola }}
+{{ r.perguruan_tinggi }}
+{{ r.alamat }}
+{{ r.telepon }}
+{{ r.email_web }}
+{{ r.sk_pt }}
+{{ r.tgl_sk_pt }}
+{{ r.sk_ps }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.tgl_sk_ps }}
+{% endtr %}
+
+
+=========================================
+MODEL: TimPenyusun (Alias Context: t_TimPenyusun)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_TimPenyusun %}
+{{ r.identitas_id }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.nama }}
+{{ r.nidn }}
+{{ r.jabatan }}
+{{ r.tanggal_pengisian }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.tanda_tangan }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_1A1 (Alias Context: t_Tabel_1A1)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_1A1 %}
+{{ r.unit_kerja }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.nama_ketua }}
+{{ r.periode_jabatan }}
+{{ r.pendidikan_terakhir }}
+{{ r.jabatan_fungsional }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.tupoksi }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_1A2_Sumber (Alias Context: t_Tabel_1A2_Sumber)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_1A2_Sumber %}
+{{ r.sumber_dana }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_1A3_Penggunaan (Alias Context: t_Tabel_1A3_Penggunaan)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_1A3_Penggunaan %}
+{{ r.penggunaan }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_1A4 (Alias Context: t_Tabel_1A4)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_1A4 %}
+{{ r.nama_dosen }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.sks_ps_sendiri }}
+{{ r.sks_ps_lain }}
+{{ r.sks_pt_lain }}
+{{ r.sks_penelitian }}
+{{ r.sks_pkm }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.sks_tambahan }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_1A5 (Alias Context: t_Tabel_1A5)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_1A5 %}
+{{ r.jenis_tenaga }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.s3 }}
+{{ r.s2 }}
+{{ r.s1 }}
+{{ r.d3 }}
+{{ r.d2_d1 }}
+{{ r.sma_smk }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.unit_kerja }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_1B_SPMI (Alias Context: t_Tabel_1B_SPMI)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_1B_SPMI %}
+{{ r.nama_unit }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.dokumen }}
+{{ r.jml_auditor_cert }}
+{{ r.jml_auditor_non }}
+{{ r.frekuensi_audit }}
+{{ r.link_pt }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_upps }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2A_Mahasiswa (Alias Context: t_Tabel_2A_Mahasiswa)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2A_Mahasiswa %}
+{{ r.tahun_akademik }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.daya_tampung }}
+{{ r.pendaftar }}
+{{ r.lulus_seleksi }}
+{{ r.mhs_baru_reguler }}
+{{ r.mhs_baru_transfer }}
+{{ r.total_mhs_reguler }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.total_mhs_transfer }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2A2_Asal (Alias Context: t_Tabel_2A2_Asal)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2A2_Asal %}
+{{ r.asal_mahasiswa }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2A3_Kondisi (Alias Context: t_Tabel_2A3_Kondisi)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2A3_Kondisi %}
+{{ r.status }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.ts }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B1_MK (Alias Context: t_Tabel_2B1_MK)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B1_MK %}
+{{ r.nama_mk }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.sks }}
+{{ r.semester }}
+{{ r.pl1 }}
+{{ r.pl2 }}
+{{ r.pl3 }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.pl4 }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B2_CPL (Alias Context: t_Tabel_2B2_CPL)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B2_CPL %}
+{{ r.kode_cpl }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.pl1 }}
+{{ r.pl2 }}
+{{ r.pl3 }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.pl4 }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B3_Pemenuhan (Alias Context: t_Tabel_2B3_Pemenuhan)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B3_Pemenuhan %}
+{{ r.cpl }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.cpmk }}
+{{ r.smt1 }}
+{{ r.smt2 }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.smt3 }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B4_MasaTunggu (Alias Context: t_Tabel_2B4_MasaTunggu)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B4_MasaTunggu %}
+{{ r.tahun_lulus }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jml_lulusan }}
+{{ r.jml_terlacak }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.waktu_tunggu }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B5_BidangKerja (Alias Context: t_Tabel_2B5_BidangKerja)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B5_BidangKerja %}
+{{ r.tahun_lulus }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jml_lulusan }}
+{{ r.jml_terlacak }}
+{{ r.bidang_infokom }}
+{{ r.bidang_non_infokom }}
+{{ r.tingkat_multinasional }}
+{{ r.tingkat_nasional }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.tingkat_wirausaha }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B6_Kepuasan (Alias Context: t_Tabel_2B6_Kepuasan)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B6_Kepuasan %}
+{{ r.jenis_kemampuan }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.sangat_baik }}
+{{ r.baik }}
+{{ r.cukup }}
+{{ r.kurang }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.tindak_lanjut }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2B_Summary (Alias Context: t_Tabel_2B_Summary)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2B_Summary %}
+{{ r.total_alumni_3thn }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.total_responden }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.total_mhs_aktif_ts }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2C_Fleksibilitas (Alias Context: t_Tabel_2C_Fleksibilitas)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2C_Fleksibilitas %}
+{{ r.bentuk_pembelajaran }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_2D_Rekognisi (Alias Context: t_Tabel_2D_Rekognisi)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_2D_Rekognisi %}
+{{ r.sumber }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jenis_pengakuan }}
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3A1_Sarana (Alias Context: t_Tabel_3A1_Sarana)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3A1_Sarana %}
+{{ r.nama_prasarana }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.daya_tampung }}
+{{ r.luas_ruang }}
+{{ r.kepemilikan }}
+{{ r.lisensi }}
+{{ r.perangkat }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3A2_Penelitian (Alias Context: t_Tabel_3A2_Penelitian)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3A2_Penelitian %}
+{{ r.nama_dtpr }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jml_mhs }}
+{{ r.judul }}
+{{ r.jenis_hibah }}
+{{ r.sumber_lni }}
+{{ r.durasi }}
+{{ r.dana_ts2 }}
+{{ r.dana_ts1 }}
+{{ r.dana_ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3A3_Pengembangan_DTPR (Alias Context: t_Tabel_3A3_Pengembangan_DTPR)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3A3_Pengembangan_DTPR %}
+{{ r.jenis_pengembangan }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.nama_dosen }}
+{{ r.ts_2 }}
+{{ r.ts_1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3C1_Kerjasama (Alias Context: t_Tabel_3C1_Kerjasama)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3C1_Kerjasama %}
+{{ r.judul }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.mitra }}
+{{ r.sumber_lni }}
+{{ r.durasi }}
+{{ r.dana_ts2 }}
+{{ r.dana_ts1 }}
+{{ r.dana_ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3C2_Publikasi (Alias Context: t_Tabel_3C2_Publikasi)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3C2_Publikasi %}
+{{ r.nama_dtpr }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.judul }}
+{{ r.jenis_pub }}
+{{ r.ts2 }}
+{{ r.ts1 }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.ts }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3C3_HKI (Alias Context: t_Tabel_3C3_HKI)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3C3_HKI %}
+{{ r.judul }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jenis_hki }}
+{{ r.nama_dtpr }}
+{{ r.ts2 }}
+{{ r.ts1 }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.ts }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_3_Summary (Alias Context: t_Tabel_3_Summary)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_3_Summary %}
+{{ r.link_roadmap }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.total_jenis_hibah }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.total_mitra }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_4A1_Sarana (Alias Context: t_Tabel_4A1_Sarana)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_4A1_Sarana %}
+{{ r.nama_prasarana }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.daya_tampung }}
+{{ r.luas_ruang }}
+{{ r.kepemilikan }}
+{{ r.lisensi }}
+{{ r.perangkat }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_4A2_PkM (Alias Context: t_Tabel_4A2_PkM)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_4A2_PkM %}
+{{ r.nama_dtpr }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.judul }}
+{{ r.jml_mhs }}
+{{ r.jenis_hibah }}
+{{ r.sumber_lni }}
+{{ r.durasi }}
+{{ r.dana_ts2 }}
+{{ r.dana_ts1 }}
+{{ r.dana_ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_4C1_Kerjasama (Alias Context: t_Tabel_4C1_Kerjasama)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_4C1_Kerjasama %}
+{{ r.judul }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.mitra }}
+{{ r.sumber_lni }}
+{{ r.durasi }}
+{{ r.dana_ts2 }}
+{{ r.dana_ts1 }}
+{{ r.dana_ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_4C2_Diseminasi (Alias Context: t_Tabel_4C2_Diseminasi)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_4C2_Diseminasi %}
+{{ r.nama_dtpr }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.judul }}
+{{ r.lni }}
+{{ r.ts2 }}
+{{ r.ts1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_4C3_HKI (Alias Context: t_Tabel_4C3_HKI)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_4C3_HKI %}
+{{ r.judul }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.jenis_hki }}
+{{ r.nama_dtpr }}
+{{ r.ts2 }}
+{{ r.ts1 }}
+{{ r.ts }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_4_Summary (Alias Context: t_Tabel_4_Summary)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_4_Summary %}
+{{ r.link_roadmap }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.total_jenis_hibah }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.jml_disem_hasil }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_5_1_TataKelola (Alias Context: t_Tabel_5_1_TataKelola)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_5_1_TataKelola %}
+{{ r.jenis_tata_kelola }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.nama_sistem }}
+{{ r.akses }}
+{{ r.unit_pengelola }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_5_2_Sarana (Alias Context: t_Tabel_5_2_Sarana)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_5_2_Sarana %}
+{{ r.nama_prasarana }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.daya_tampung }}
+{{ r.luas_ruang }}
+{{ r.kepemilikan }}
+{{ r.lisensi }}
+{{ r.perangkat }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.link_bukti }}
+{% endtr %}
+
+
+=========================================
+MODEL: Tabel_6_Misi (Alias Context: t_Tabel_6_Misi)
+=========================================
+KOTAK KIRI (Kolom 1):
+{% tr for r in t_Tabel_6_Misi %}
+{{ r.visi_pt }}
+
+KOTAK TENGAH (Kolom 2 s/d N-1):
+{{ r.visi_upps }}
+{{ r.visi_ps }}
+{{ r.misi_pt }}
+
+KOTAK KANAN (Kolom Terakhir):
+{{ r.misi_upps }}
+{% endtr %}
+
