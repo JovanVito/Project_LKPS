@@ -194,12 +194,22 @@
                     <div class="dropdown">
                         <button class="btn btn-light dropdown-toggle border-0 shadow-sm" type="button"
                             data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle text-primary me-2"></i> User Program Studi
+                            <i class="fas fa-user-circle text-primary me-2"></i>
+                            {% if request.user.first_name %}
+                                {{ request.user.first_name }}
+                            {% else %}
+                                {{ request.user.username }}
+                            {% endif %}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
                             <li>
                                 <a class="dropdown-item py-2" href="#" onclick="alert('Pengaturan segera hadir');">
                                     <i class="fas fa-cog me-2 text-muted"></i> Pengaturan Akun
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-warning py-2 fw-bold" href="#" onclick="clearLkpsData(); return false;">
+                                    <i class="fas fa-trash-alt me-2"></i> Bersihkan Data LKPS
                                 </a>
                             </li>
                             <li>
@@ -393,6 +403,41 @@
                 toggleBtn.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'));
             }
         })();
+    </script>
+    <script>
+        function clearLkpsData() {
+            if (confirm("⚠️ PERINGATAN KELAYAKAN DATA ⚠️\n\nApakah Anda yakin ingin MENGHAPUS SEMUA DATA LKPS di browser DAN DATABASE?\n\nPastikan Anda sudah men-download Export Word sebelum melakukan ini.\nData yang dihapus tidak dapat dikembalikan!")) {
+
+                // 1. Amankan dulu ingatan tentang Sidebar agar menu tidak rusak/tertutup
+                const sidebarState = localStorage.getItem('lkps_sidebar_state');
+
+                // 2. SAPU BERSIH SELURUH LOCAL STORAGE DAN SESSION STORAGE TANPA SISA
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // 3. Kembalikan ingatan Sidebar ke tempat asalnya
+                if (sidebarState) {
+                    localStorage.setItem('lkps_sidebar_state', sidebarState);
+                }
+
+                // 4. Buat form dinamis untuk menembak POST ke backend Django
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{% url 'hapus_data_database' %}";
+
+                // Tambahkan CSRF Token wajib Django
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = '{{ csrf_token }}';
+
+                form.appendChild(csrfInput);
+                document.body.appendChild(form);
+
+                // 5. Kirim perintah eksekusi ke Python (backend akan redirect ke dashboard)
+                form.submit();
+            }
+        }
     </script>
 </body>
 

@@ -65,4 +65,9 @@ urlpatterns = [
     # PENGATURAN AKSES KRITERIA (Staff Only)
     # =====================================================
     path('pengaturan-akses/', views.halaman_pengaturan_akses, name='halaman_pengaturan_akses'),
+
+    # =====================================================
+    # RESET DATA LKPS (Hapus Semua Data Tahunan)
+    # =====================================================
+    path('hapus-data-database/', views.hapus_data_database_view, name='hapus_data_database'),
 ]

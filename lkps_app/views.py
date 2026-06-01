@@ -1,4 +1,5 @@
 import json
+import html as html_module
 from django.conf import settings
 import google.generativeai as genai
 from django.views.decorators.csrf import csrf_exempt
@@ -164,6 +165,76 @@ def halaman_tabel_dinamis(request, kode_tabel):
 # ==========================================
 # EXPORT TO WORD
 # ==========================================
+
+def xml_safe(value):
+    """Escape karakter XML berbahaya (&, <, >) dari string agar tidak merusak dokumen Word."""
+    if value is None:
+        return ''
+    return html_module.escape(str(value), quote=False)
+
+def sanitize_obj(obj, text_fields):
+    """
+    Mengambil instance model dan mengembalikan dict yang sudah di-escape
+    pada semua field teks yang diberikan. Field non-teks dibiarkan apa adanya.
+    """
+    data = {}
+    for field in obj._meta.get_fields():
+        fname = field.name
+        if not hasattr(obj, fname):
+            continue
+        val = getattr(obj, fname)
+        if fname in text_fields:
+            data[fname] = xml_safe(val)
+        else:
+            data[fname] = val
+    return data
+
+def qs_to_list(queryset, text_fields):
+    """Konversi QuerySet ke list-of-dict dengan sanitasi field teks."""
+    return [sanitize_obj(obj, text_fields) for obj in queryset]
+
+# Field teks per model (CharField / TextField / URLField yang bisa mengandung &, <, >)
+TEXT_FIELDS_MAP = {
+    'IdentitasPengusul':          ['nama_ps_sampul', 'nama_pt_sampul', 'kota_sampul', 'unit_pengelola',
+                                    'perguruan_tinggi', 'alamat', 'telepon', 'email_web', 'sk_pt', 'sk_ps'],
+    'TimPenyusun':                ['nama', 'nidn', 'jabatan'],
+    'Tabel_1A1':                  ['unit_kerja', 'nama_ketua', 'periode_jabatan', 'pendidikan_terakhir',
+                                    'jabatan_fungsional', 'tupoksi'],
+    'Tabel_1A2_Sumber':           ['sumber_dana', 'link_bukti'],
+    'Tabel_1A3_Penggunaan':       ['penggunaan', 'link_bukti'],
+    'Tabel_1A4':                  ['nama_dosen'],
+    'Tabel_1A5':                  ['jenis_tenaga', 'unit_kerja'],
+    'Tabel_1B_SPMI':              ['nama_unit', 'dokumen', 'link_pt', 'link_upps'],
+    'Tabel_2A_Mahasiswa':         ['tahun_akademik'],
+    'Tabel_2A2_Asal':             ['asal_mahasiswa', 'link_bukti'],
+    'Tabel_2A3_Kondisi':          ['status'],
+    'Tabel_2B1_MK':               ['nama_mk'],
+    'Tabel_2B2_CPL':              ['kode_cpl'],
+    'Tabel_2B3_Pemenuhan':        ['cpl', 'cpmk', 'smt1', 'smt2', 'smt3'],
+    'Tabel_2B4_MasaTunggu':       ['tahun_lulus'],
+    'Tabel_2B5_BidangKerja':      ['tahun_lulus'],
+    'Tabel_2B6_Kepuasan':         ['jenis_kemampuan', 'tindak_lanjut'],
+    'Tabel_2C_Fleksibilitas':     ['bentuk_pembelajaran', 'link_bukti'],
+    'Tabel_2D_Rekognisi':         ['sumber', 'jenis_pengakuan', 'link_bukti'],
+    'Tabel_3A1_Sarana':           ['nama_prasarana', 'kepemilikan', 'lisensi', 'perangkat', 'link_bukti'],
+    'Tabel_3A2_Penelitian':       ['nama_dtpr', 'judul', 'jenis_hibah', 'sumber_lni', 'link_bukti'],
+    'Tabel_3A3_Pengembangan_DTPR':['jenis_pengembangan', 'nama_dosen', 'link_bukti'],
+    'Tabel_3C1_Kerjasama':        ['judul', 'mitra', 'sumber_lni', 'link_bukti'],
+    'Tabel_3C2_Publikasi':        ['nama_dtpr', 'judul', 'jenis_pub'],
+    'Tabel_3C3_HKI':              ['judul', 'jenis_hki', 'nama_dtpr'],
+    'Tabel_3_Summary':            ['link_roadmap'],
+    'Tabel_4A1_Sarana':           ['nama_prasarana', 'kepemilikan', 'lisensi', 'perangkat', 'link_bukti'],
+    'Tabel_4A2_PkM':              ['nama_dtpr', 'judul', 'jenis_hibah', 'sumber_lni', 'link_bukti'],
+    'Tabel_4C1_Kerjasama':        ['judul', 'mitra', 'sumber_lni', 'link_bukti'],
+    'Tabel_4C2_Diseminasi':       ['nama_dtpr', 'judul', 'lni', 'link_bukti'],
+    'Tabel_4C3_HKI':              ['judul', 'jenis_hki', 'nama_dtpr', 'link_bukti'],
+    'Tabel_4_Summary':            ['link_roadmap'],
+    'Tabel_5_1_TataKelola':       ['jenis_tata_kelola', 'nama_sistem', 'akses', 'unit_pengelola', 'link_bukti'],
+    'Tabel_5_2_Sarana':           ['nama_prasarana', 'kepemilikan', 'lisensi', 'perangkat', 'link_bukti'],
+    'Tabel_6_Misi':               ['visi_pt', 'misi_pt', 'visi_upps', 'misi_upps',
+                                    'visi_ps', 'misi_ps', 'tujuan_ps', 'sasaran_ps'],
+}
+
 @login_required(login_url='login')
 def export_lkps_word(request):
     try:
@@ -171,54 +242,68 @@ def export_lkps_word(request):
         doc = DocxTemplate(template_path)
         identitas_data = IdentitasPengusul.objects.first()
 
+        def safe_qs(Model, queryset):
+            """Konversi QuerySet ke list-of-dict dengan sanitasi teks."""
+            name = Model.__name__
+            tf = TEXT_FIELDS_MAP.get(name, [])
+            return qs_to_list(queryset, tf)
+
+        def safe_obj(obj):
+            """Sanitasi satu object model."""
+            if obj is None:
+                return None
+            name = obj.__class__.__name__
+            tf = TEXT_FIELDS_MAP.get(name, [])
+            return sanitize_obj(obj, tf)
+
         context = {
-            'identitas': identitas_data or {},
-            'tim_penyusun': TimPenyusun.objects.all(),
-            't1a1': Tabel_1A1.objects.all(),
-            't1a2': Tabel_1A2_Sumber.objects.all(),
-            't1a3': Tabel_1A3_Penggunaan.objects.all(),
-            't1a4': Tabel_1A4.objects.all(),
-            't1a5': Tabel_1A5.objects.all(),
-            't1b': Tabel_1B_SPMI.objects.all(), 
-            't2a1': Tabel_2A_Mahasiswa.objects.all().order_by('id'),
-            't2a2': Tabel_2A2_Asal.objects.all().order_by('id'),
-            't2a3': Tabel_2A3_Kondisi.objects.all().order_by('id'),
-            't2b1': Tabel_2B1_MK.objects.all(),
-            't2b2': Tabel_2B2_CPL.objects.all(),
-            't2b3': Tabel_2B3_Pemenuhan.objects.all(),
-            't2b4': Tabel_2B4_MasaTunggu.objects.all().order_by('id'),
-            't2b5': Tabel_2B5_BidangKerja.objects.all().order_by('id'),
-            't2b6': Tabel_2B6_Kepuasan.objects.all(),
-            't2c': Tabel_2C_Fleksibilitas.objects.all(), 
-            't2d': Tabel_2D_Rekognisi.objects.all(), 
-            'sum2': Tabel_2B_Summary.objects.first(),
-            't3a1': Tabel_3A1_Sarana.objects.all(),
-            't3a2': Tabel_3A2_Penelitian.objects.all(),
-            't3a3': Tabel_3A3_Pengembangan_DTPR.objects.all(), 
-            't3c1': Tabel_3C1_Kerjasama.objects.all(),
-            't3c2': Tabel_3C2_Publikasi.objects.all(),
-            't3c3': Tabel_3C3_HKI.objects.all(),
-            'sum3': Tabel_3_Summary.objects.first(),
-            't4a1': Tabel_4A1_Sarana.objects.all(),
-            't4a2': Tabel_4A2_PkM.objects.all(),
-            't4c1': Tabel_4C1_Kerjasama.objects.all(),
-            't4c2': Tabel_4C2_Diseminasi.objects.all(),
-            't4c3': Tabel_4C3_HKI.objects.all(),
-            'sum4': Tabel_4_Summary.objects.first(),
-            't5_1': Tabel_5_1_TataKelola.objects.all(),
-            't5_2': Tabel_5_2_Sarana.objects.all(),
-            't6': Tabel_6_Misi.objects.first(),
+            'identitas':    safe_obj(identitas_data) if identitas_data else {},
+            'tim_penyusun': safe_qs(TimPenyusun, TimPenyusun.objects.all()),
+            't1a1':  safe_qs(Tabel_1A1,             Tabel_1A1.objects.all()),
+            't1a2':  safe_qs(Tabel_1A2_Sumber,      Tabel_1A2_Sumber.objects.all()),
+            't1a3':  safe_qs(Tabel_1A3_Penggunaan,  Tabel_1A3_Penggunaan.objects.all()),
+            't1a4':  safe_qs(Tabel_1A4,             Tabel_1A4.objects.all()),
+            't1a5':  safe_qs(Tabel_1A5,             Tabel_1A5.objects.all()),
+            't1b':   safe_qs(Tabel_1B_SPMI,         Tabel_1B_SPMI.objects.all()),
+            't2a1':  safe_qs(Tabel_2A_Mahasiswa,    Tabel_2A_Mahasiswa.objects.all().order_by('id')),
+            't2a2':  safe_qs(Tabel_2A2_Asal,        Tabel_2A2_Asal.objects.all().order_by('id')),
+            't2a3':  safe_qs(Tabel_2A3_Kondisi,     Tabel_2A3_Kondisi.objects.all().order_by('id')),
+            't2b1':  safe_qs(Tabel_2B1_MK,          Tabel_2B1_MK.objects.all()),
+            't2b2':  safe_qs(Tabel_2B2_CPL,         Tabel_2B2_CPL.objects.all()),
+            't2b3':  safe_qs(Tabel_2B3_Pemenuhan,   Tabel_2B3_Pemenuhan.objects.all()),
+            't2b4':  safe_qs(Tabel_2B4_MasaTunggu,  Tabel_2B4_MasaTunggu.objects.all().order_by('id')),
+            't2b5':  safe_qs(Tabel_2B5_BidangKerja, Tabel_2B5_BidangKerja.objects.all().order_by('id')),
+            't2b6':  safe_qs(Tabel_2B6_Kepuasan,    Tabel_2B6_Kepuasan.objects.all()),
+            't2c':   safe_qs(Tabel_2C_Fleksibilitas, Tabel_2C_Fleksibilitas.objects.all()),
+            't2d':   safe_qs(Tabel_2D_Rekognisi,    Tabel_2D_Rekognisi.objects.all()),
+            'sum2':  safe_obj(Tabel_2B_Summary.objects.first()),
+            't3a1':  safe_qs(Tabel_3A1_Sarana,      Tabel_3A1_Sarana.objects.all()),
+            't3a2':  safe_qs(Tabel_3A2_Penelitian,  Tabel_3A2_Penelitian.objects.all()),
+            't3a3':  safe_qs(Tabel_3A3_Pengembangan_DTPR, Tabel_3A3_Pengembangan_DTPR.objects.all()),
+            't3c1':  safe_qs(Tabel_3C1_Kerjasama,   Tabel_3C1_Kerjasama.objects.all()),
+            't3c2':  safe_qs(Tabel_3C2_Publikasi,   Tabel_3C2_Publikasi.objects.all()),
+            't3c3':  safe_qs(Tabel_3C3_HKI,         Tabel_3C3_HKI.objects.all()),
+            'sum3':  safe_obj(Tabel_3_Summary.objects.first()),
+            't4a1':  safe_qs(Tabel_4A1_Sarana,      Tabel_4A1_Sarana.objects.all()),
+            't4a2':  safe_qs(Tabel_4A2_PkM,         Tabel_4A2_PkM.objects.all()),
+            't4c1':  safe_qs(Tabel_4C1_Kerjasama,   Tabel_4C1_Kerjasama.objects.all()),
+            't4c2':  safe_qs(Tabel_4C2_Diseminasi,  Tabel_4C2_Diseminasi.objects.all()),
+            't4c3':  safe_qs(Tabel_4C3_HKI,         Tabel_4C3_HKI.objects.all()),
+            'sum4':  safe_obj(Tabel_4_Summary.objects.first()),
+            't5_1':  safe_qs(Tabel_5_1_TataKelola,  Tabel_5_1_TataKelola.objects.all()),
+            't5_2':  safe_qs(Tabel_5_2_Sarana,      Tabel_5_2_Sarana.objects.all()),
+            't6':    safe_obj(Tabel_6_Misi.objects.first()),
         }
-        
+
         if identitas_data and identitas_data.logo_pt:
             try:
-                image_path = identitas_data.logo_pt.path 
-                context['logo'] = InlineImage(doc, image_path, width=Mm(40))
+                image_path = identitas_data.logo_pt.path
+                context['logo'] = InlineImage(doc, image_path, width=Mm(60))
             except Exception as e:
                 print(f"Gagal memuat gambar logo: {e}")
-                context['logo'] = '' 
+                context['logo'] = ''
         else:
-            context['logo'] = '' 
+            context['logo'] = ''
 
         doc.render(context)
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
@@ -227,7 +312,10 @@ def export_lkps_word(request):
         return response
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return HttpResponse(f"Gagal mencetak dokumen: {str(e)}", status=500)
+
 
 # ==========================================
 # CHATBOT & UTILS
@@ -1218,3 +1306,72 @@ def halaman_pengaturan_akses(request):
         'range_kriteria': range(1, JUMLAH_KRITERIA + 1),
         'kriteria_keterangan': KRITERIA_KETERANGAN,
     })
+
+
+# ==========================================
+# HAPUS SEMUA DATA LKPS (Reset Tahunan)
+# ==========================================
+@login_required(login_url='login')
+def hapus_data_database_view(request):
+    """
+    Menghapus seluruh rekaman data dari semua tabel kriteria LKPS.
+    Digunakan saat user ingin memulai laporan tahunan baru dari nol.
+    Hanya menerima POST request (CSRF-protected).
+    """
+    if request.method == 'POST':
+        try:
+            with transaction.atomic():
+                # ─── Kriteria 1 ───
+                Tabel_1A1.objects.all().delete()
+                Tabel_1A2_Sumber.objects.all().delete()
+                Tabel_1A3_Penggunaan.objects.all().delete()
+                Tabel_1A4.objects.all().delete()
+                Tabel_1A5.objects.all().delete()
+                Tabel_1B_SPMI.objects.all().delete()
+
+                # ─── Kriteria 2 ───
+                Tabel_2A_Mahasiswa.objects.all().delete()
+                Tabel_2A2_Asal.objects.all().delete()
+                Tabel_2A3_Kondisi.objects.all().delete()
+                Tabel_2B1_MK.objects.all().delete()
+                Tabel_2B2_CPL.objects.all().delete()
+                Tabel_2B3_Pemenuhan.objects.all().delete()
+                Tabel_2B4_MasaTunggu.objects.all().delete()
+                Tabel_2B5_BidangKerja.objects.all().delete()
+                Tabel_2B6_Kepuasan.objects.all().delete()
+                Tabel_2B_Summary.objects.all().delete()
+                Tabel_2C_Fleksibilitas.objects.all().delete()
+                Tabel_2D_Rekognisi.objects.all().delete()
+
+                # ─── Kriteria 3 ───
+                Tabel_3A1_Sarana.objects.all().delete()
+                Tabel_3A2_Penelitian.objects.all().delete()
+                Tabel_3A3_Pengembangan_DTPR.objects.all().delete()
+                Tabel_3C1_Kerjasama.objects.all().delete()
+                Tabel_3C2_Publikasi.objects.all().delete()
+                Tabel_3C3_HKI.objects.all().delete()
+                Tabel_3_Summary.objects.all().delete()
+
+                # ─── Kriteria 4 ───
+                Tabel_4A1_Sarana.objects.all().delete()
+                Tabel_4A2_PkM.objects.all().delete()
+                Tabel_4C1_Kerjasama.objects.all().delete()
+                Tabel_4C2_Diseminasi.objects.all().delete()
+                Tabel_4C3_HKI.objects.all().delete()
+                Tabel_4_Summary.objects.all().delete()
+
+                # ─── Kriteria 5 ───
+                Tabel_5_1_TataKelola.objects.all().delete()
+                Tabel_5_2_Sarana.objects.all().delete()
+
+                # ─── Kriteria 6 ───
+                Tabel_6_Misi.objects.all().delete()
+
+                # ─── Identitas & Tim Penyusun ───
+                TimPenyusun.objects.all().delete()
+                IdentitasPengusul.objects.all().delete()
+
+        except Exception as e:
+            messages.error(request, f'Gagal menghapus data: {str(e)}')
+
+    return redirect('dashboard')
